@@ -1,4 +1,4 @@
-# ride
+# Ride Sharing Blockchain
 **ride** is a blockchain for ride sharing utilizing the Cosmos SDK and Tendermint, created with [Ignite CLI](https://ignite.com/cli).
 
 ## TLDR
