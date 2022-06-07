@@ -1,0 +1,14 @@
+syntax = "proto3";
+package smarshallspitzbart.ride.ride;
+
+import "gogoproto/gogo.proto";
+import "ride/params.proto";
+// this line is used by starport scaffolding # genesis/proto/import
+
+option go_package = "github.com/smarshall-spitzbart/ride/x/ride/types";
+
+// GenesisState defines the ride module's genesis state.
+message GenesisState {
+  Params params = 1 [(gogoproto.nullable) = false];
+  // this line is used by starport scaffolding # genesis/proto/state
+}

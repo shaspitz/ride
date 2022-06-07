@@ -1,0 +1,12 @@
+syntax = "proto3";
+package smarshallspitzbart.ride.ride;
+
+import "gogoproto/gogo.proto";
+
+option go_package = "github.com/smarshall-spitzbart/ride/x/ride/types";
+
+// Params defines the parameters for the module.
+message Params {
+  option (gogoproto.goproto_stringer) = false;
+  
+}
