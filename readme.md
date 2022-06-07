@@ -4,7 +4,8 @@
 ## TLDR
 Focuses on the business logic for such an idea, with the assumption that a [proof-of-location](https://tokens-economy.gitbook.io/consensus/chain-based-proof-of-capacity-space/dynamic-proof-of-location) like system would be implemented elsewhere. 
 
-## Common CLI Commands
+## Application CLI Commands
+TODO
 
 ## Get started
 
