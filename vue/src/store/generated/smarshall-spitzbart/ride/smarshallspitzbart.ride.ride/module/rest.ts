@@ -13,10 +13,19 @@ export interface ProtobufAny {
   "@type"?: string;
 }
 
+export interface RideNextRide {
+  /** @format uint64 */
+  idValue?: string;
+}
+
 /**
  * Params defines the parameters for the module.
  */
 export type RideParams = object;
+
+export interface RideQueryGetNextRideResponse {
+  NextRide?: RideNextRide;
+}
 
 /**
  * QueryParamsResponse is response type for the Query/Params RPC method.
@@ -229,6 +238,22 @@ export class HttpClient<SecurityDataType = unknown> {
  * @version version not set
  */
 export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDataType> {
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryNextRide
+   * @summary Queries a NextRide by index.
+   * @request GET:/smarshall-spitzbart/ride/ride/next_ride
+   */
+  queryNextRide = (params: RequestParams = {}) =>
+    this.request<RideQueryGetNextRideResponse, RpcStatus>({
+      path: `/smarshall-spitzbart/ride/ride/next_ride`,
+      method: "GET",
+      format: "json",
+      ...params,
+    });
+
   /**
    * No description
    *

@@ -1,6 +1,7 @@
 /* eslint-disable */
 import { Reader, Writer } from "protobufjs/minimal";
 import { Params } from "../ride/params";
+import { NextRide } from "../ride/next_ride";
 
 export const protobufPackage = "smarshallspitzbart.ride.ride";
 
@@ -11,6 +12,12 @@ export interface QueryParamsRequest {}
 export interface QueryParamsResponse {
   /** params holds all the parameters of this module. */
   params: Params | undefined;
+}
+
+export interface QueryGetNextRideRequest {}
+
+export interface QueryGetNextRideResponse {
+  NextRide: NextRide | undefined;
 }
 
 const baseQueryParamsRequest: object = {};
@@ -110,10 +117,130 @@ export const QueryParamsResponse = {
   },
 };
 
+const baseQueryGetNextRideRequest: object = {};
+
+export const QueryGetNextRideRequest = {
+  encode(_: QueryGetNextRideRequest, writer: Writer = Writer.create()): Writer {
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): QueryGetNextRideRequest {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = {
+      ...baseQueryGetNextRideRequest,
+    } as QueryGetNextRideRequest;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(_: any): QueryGetNextRideRequest {
+    const message = {
+      ...baseQueryGetNextRideRequest,
+    } as QueryGetNextRideRequest;
+    return message;
+  },
+
+  toJSON(_: QueryGetNextRideRequest): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  fromPartial(
+    _: DeepPartial<QueryGetNextRideRequest>
+  ): QueryGetNextRideRequest {
+    const message = {
+      ...baseQueryGetNextRideRequest,
+    } as QueryGetNextRideRequest;
+    return message;
+  },
+};
+
+const baseQueryGetNextRideResponse: object = {};
+
+export const QueryGetNextRideResponse = {
+  encode(
+    message: QueryGetNextRideResponse,
+    writer: Writer = Writer.create()
+  ): Writer {
+    if (message.NextRide !== undefined) {
+      NextRide.encode(message.NextRide, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(
+    input: Reader | Uint8Array,
+    length?: number
+  ): QueryGetNextRideResponse {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = {
+      ...baseQueryGetNextRideResponse,
+    } as QueryGetNextRideResponse;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.NextRide = NextRide.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryGetNextRideResponse {
+    const message = {
+      ...baseQueryGetNextRideResponse,
+    } as QueryGetNextRideResponse;
+    if (object.NextRide !== undefined && object.NextRide !== null) {
+      message.NextRide = NextRide.fromJSON(object.NextRide);
+    } else {
+      message.NextRide = undefined;
+    }
+    return message;
+  },
+
+  toJSON(message: QueryGetNextRideResponse): unknown {
+    const obj: any = {};
+    message.NextRide !== undefined &&
+      (obj.NextRide = message.NextRide
+        ? NextRide.toJSON(message.NextRide)
+        : undefined);
+    return obj;
+  },
+
+  fromPartial(
+    object: DeepPartial<QueryGetNextRideResponse>
+  ): QueryGetNextRideResponse {
+    const message = {
+      ...baseQueryGetNextRideResponse,
+    } as QueryGetNextRideResponse;
+    if (object.NextRide !== undefined && object.NextRide !== null) {
+      message.NextRide = NextRide.fromPartial(object.NextRide);
+    } else {
+      message.NextRide = undefined;
+    }
+    return message;
+  },
+};
+
 /** Query defines the gRPC querier service. */
 export interface Query {
   /** Parameters queries the parameters of the module. */
   Params(request: QueryParamsRequest): Promise<QueryParamsResponse>;
+  /** Queries a NextRide by index. */
+  NextRide(request: QueryGetNextRideRequest): Promise<QueryGetNextRideResponse>;
 }
 
 export class QueryClientImpl implements Query {
@@ -129,6 +256,20 @@ export class QueryClientImpl implements Query {
       data
     );
     return promise.then((data) => QueryParamsResponse.decode(new Reader(data)));
+  }
+
+  NextRide(
+    request: QueryGetNextRideRequest
+  ): Promise<QueryGetNextRideResponse> {
+    const data = QueryGetNextRideRequest.encode(request).finish();
+    const promise = this.rpc.request(
+      "smarshallspitzbart.ride.ride.Query",
+      "NextRide",
+      data
+    );
+    return promise.then((data) =>
+      QueryGetNextRideResponse.decode(new Reader(data))
+    );
   }
 }
 

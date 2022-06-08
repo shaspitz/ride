@@ -29501,6 +29501,42 @@ paths:
           format: uint64
       tags:
         - Query
+  /smarshall-spitzbart/ride/ride/next_ride:
+    get:
+      summary: Queries a NextRide by index.
+      operationId: SmarshallspitzbartRideRideNextRide
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              NextRide:
+                type: object
+                properties:
+                  idValue:
+                    type: string
+                    format: uint64
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    '@type':
+                      type: string
+                  additionalProperties: {}
+      tags:
+        - Query
   /smarshall-spitzbart/ride/ride/params:
     get:
       summary: Parameters queries the parameters of the module.
@@ -50688,9 +50724,24 @@ definitions:
     description: >-
       QueryAppVersionResponse is the response type for the Query/AppVersion RPC
       method.
+  smarshallspitzbart.ride.ride.NextRide:
+    type: object
+    properties:
+      idValue:
+        type: string
+        format: uint64
   smarshallspitzbart.ride.ride.Params:
     type: object
     description: Params defines the parameters for the module.
+  smarshallspitzbart.ride.ride.QueryGetNextRideResponse:
+    type: object
+    properties:
+      NextRide:
+        type: object
+        properties:
+          idValue:
+            type: string
+            format: uint64
   smarshallspitzbart.ride.ride.QueryParamsResponse:
     type: object
     properties:

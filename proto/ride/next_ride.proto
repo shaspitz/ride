@@ -1,0 +1,9 @@
+syntax = "proto3";
+package smarshallspitzbart.ride.ride;
+
+option go_package = "github.com/smarshall-spitzbart/ride/x/ride/types";
+
+message NextRide {
+  uint64 idValue = 1; 
+  
+}
