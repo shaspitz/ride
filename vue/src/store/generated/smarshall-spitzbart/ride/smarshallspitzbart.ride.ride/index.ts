@@ -2,9 +2,10 @@ import { txClient, queryClient, MissingWalletError , registry} from './module'
 
 import { NextRide } from "./module/types/ride/next_ride"
 import { Params } from "./module/types/ride/params"
+import { StoredRide } from "./module/types/ride/stored_ride"
 
 
-export { NextRide, Params };
+export { NextRide, Params, StoredRide };
 
 async function initTxClient(vuexGetters) {
 	return await txClient(vuexGetters['common/wallet/signer'], {
@@ -44,10 +45,13 @@ const getDefaultState = () => {
 	return {
 				Params: {},
 				NextRide: {},
+				StoredRide: {},
+				StoredRideAll: {},
 				
 				_Structure: {
 						NextRide: getStructure(NextRide.fromPartial({})),
 						Params: getStructure(Params.fromPartial({})),
+						StoredRide: getStructure(StoredRide.fromPartial({})),
 						
 		},
 		_Registry: registry,
@@ -87,6 +91,18 @@ export default {
 						(<any> params).query=null
 					}
 			return state.NextRide[JSON.stringify(params)] ?? {}
+		},
+				getStoredRide: (state) => (params = { params: {}}) => {
+					if (!(<any> params).query) {
+						(<any> params).query=null
+					}
+			return state.StoredRide[JSON.stringify(params)] ?? {}
+		},
+				getStoredRideAll: (state) => (params = { params: {}}) => {
+					if (!(<any> params).query) {
+						(<any> params).query=null
+					}
+			return state.StoredRideAll[JSON.stringify(params)] ?? {}
 		},
 				
 		getTypeStructure: (state) => (type) => {
@@ -161,6 +177,54 @@ export default {
 				return getters['getNextRide']( { params: {...key}, query}) ?? {}
 			} catch (e) {
 				throw new Error('QueryClient:QueryNextRide API Node Unavailable. Could not perform query: ' + e.message)
+				
+			}
+		},
+		
+		
+		
+		
+		 		
+		
+		
+		async QueryStoredRide({ commit, rootGetters, getters }, { options: { subscribe, all} = { subscribe:false, all:false}, params, query=null }) {
+			try {
+				const key = params ?? {};
+				const queryClient=await initQueryClient(rootGetters)
+				let value= (await queryClient.queryStoredRide( key.index)).data
+				
+					
+				commit('QUERY', { query: 'StoredRide', key: { params: {...key}, query}, value })
+				if (subscribe) commit('SUBSCRIBE', { action: 'QueryStoredRide', payload: { options: { all }, params: {...key},query }})
+				return getters['getStoredRide']( { params: {...key}, query}) ?? {}
+			} catch (e) {
+				throw new Error('QueryClient:QueryStoredRide API Node Unavailable. Could not perform query: ' + e.message)
+				
+			}
+		},
+		
+		
+		
+		
+		 		
+		
+		
+		async QueryStoredRideAll({ commit, rootGetters, getters }, { options: { subscribe, all} = { subscribe:false, all:false}, params, query=null }) {
+			try {
+				const key = params ?? {};
+				const queryClient=await initQueryClient(rootGetters)
+				let value= (await queryClient.queryStoredRideAll(query)).data
+				
+					
+				while (all && (<any> value).pagination && (<any> value).pagination.next_key!=null) {
+					let next_values=(await queryClient.queryStoredRideAll({...query, 'pagination.key':(<any> value).pagination.next_key})).data
+					value = mergeResults(value, next_values);
+				}
+				commit('QUERY', { query: 'StoredRideAll', key: { params: {...key}, query}, value })
+				if (subscribe) commit('SUBSCRIBE', { action: 'QueryStoredRideAll', payload: { options: { all }, params: {...key},query }})
+				return getters['getStoredRideAll']( { params: {...key}, query}) ?? {}
+			} catch (e) {
+				throw new Error('QueryClient:QueryStoredRideAll API Node Unavailable. Could not perform query: ' + e.message)
 				
 			}
 		},

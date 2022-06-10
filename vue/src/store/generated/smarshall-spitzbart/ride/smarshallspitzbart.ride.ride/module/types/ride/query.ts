@@ -2,6 +2,11 @@
 import { Reader, Writer } from "protobufjs/minimal";
 import { Params } from "../ride/params";
 import { NextRide } from "../ride/next_ride";
+import { StoredRide } from "../ride/stored_ride";
+import {
+  PageRequest,
+  PageResponse,
+} from "../cosmos/base/query/v1beta1/pagination";
 
 export const protobufPackage = "smarshallspitzbart.ride.ride";
 
@@ -18,6 +23,23 @@ export interface QueryGetNextRideRequest {}
 
 export interface QueryGetNextRideResponse {
   NextRide: NextRide | undefined;
+}
+
+export interface QueryGetStoredRideRequest {
+  index: string;
+}
+
+export interface QueryGetStoredRideResponse {
+  storedRide: StoredRide | undefined;
+}
+
+export interface QueryAllStoredRideRequest {
+  pagination: PageRequest | undefined;
+}
+
+export interface QueryAllStoredRideResponse {
+  storedRide: StoredRide[];
+  pagination: PageResponse | undefined;
 }
 
 const baseQueryParamsRequest: object = {};
@@ -235,12 +257,334 @@ export const QueryGetNextRideResponse = {
   },
 };
 
+const baseQueryGetStoredRideRequest: object = { index: "" };
+
+export const QueryGetStoredRideRequest = {
+  encode(
+    message: QueryGetStoredRideRequest,
+    writer: Writer = Writer.create()
+  ): Writer {
+    if (message.index !== "") {
+      writer.uint32(10).string(message.index);
+    }
+    return writer;
+  },
+
+  decode(
+    input: Reader | Uint8Array,
+    length?: number
+  ): QueryGetStoredRideRequest {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = {
+      ...baseQueryGetStoredRideRequest,
+    } as QueryGetStoredRideRequest;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.index = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryGetStoredRideRequest {
+    const message = {
+      ...baseQueryGetStoredRideRequest,
+    } as QueryGetStoredRideRequest;
+    if (object.index !== undefined && object.index !== null) {
+      message.index = String(object.index);
+    } else {
+      message.index = "";
+    }
+    return message;
+  },
+
+  toJSON(message: QueryGetStoredRideRequest): unknown {
+    const obj: any = {};
+    message.index !== undefined && (obj.index = message.index);
+    return obj;
+  },
+
+  fromPartial(
+    object: DeepPartial<QueryGetStoredRideRequest>
+  ): QueryGetStoredRideRequest {
+    const message = {
+      ...baseQueryGetStoredRideRequest,
+    } as QueryGetStoredRideRequest;
+    if (object.index !== undefined && object.index !== null) {
+      message.index = object.index;
+    } else {
+      message.index = "";
+    }
+    return message;
+  },
+};
+
+const baseQueryGetStoredRideResponse: object = {};
+
+export const QueryGetStoredRideResponse = {
+  encode(
+    message: QueryGetStoredRideResponse,
+    writer: Writer = Writer.create()
+  ): Writer {
+    if (message.storedRide !== undefined) {
+      StoredRide.encode(message.storedRide, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(
+    input: Reader | Uint8Array,
+    length?: number
+  ): QueryGetStoredRideResponse {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = {
+      ...baseQueryGetStoredRideResponse,
+    } as QueryGetStoredRideResponse;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.storedRide = StoredRide.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryGetStoredRideResponse {
+    const message = {
+      ...baseQueryGetStoredRideResponse,
+    } as QueryGetStoredRideResponse;
+    if (object.storedRide !== undefined && object.storedRide !== null) {
+      message.storedRide = StoredRide.fromJSON(object.storedRide);
+    } else {
+      message.storedRide = undefined;
+    }
+    return message;
+  },
+
+  toJSON(message: QueryGetStoredRideResponse): unknown {
+    const obj: any = {};
+    message.storedRide !== undefined &&
+      (obj.storedRide = message.storedRide
+        ? StoredRide.toJSON(message.storedRide)
+        : undefined);
+    return obj;
+  },
+
+  fromPartial(
+    object: DeepPartial<QueryGetStoredRideResponse>
+  ): QueryGetStoredRideResponse {
+    const message = {
+      ...baseQueryGetStoredRideResponse,
+    } as QueryGetStoredRideResponse;
+    if (object.storedRide !== undefined && object.storedRide !== null) {
+      message.storedRide = StoredRide.fromPartial(object.storedRide);
+    } else {
+      message.storedRide = undefined;
+    }
+    return message;
+  },
+};
+
+const baseQueryAllStoredRideRequest: object = {};
+
+export const QueryAllStoredRideRequest = {
+  encode(
+    message: QueryAllStoredRideRequest,
+    writer: Writer = Writer.create()
+  ): Writer {
+    if (message.pagination !== undefined) {
+      PageRequest.encode(message.pagination, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(
+    input: Reader | Uint8Array,
+    length?: number
+  ): QueryAllStoredRideRequest {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = {
+      ...baseQueryAllStoredRideRequest,
+    } as QueryAllStoredRideRequest;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.pagination = PageRequest.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryAllStoredRideRequest {
+    const message = {
+      ...baseQueryAllStoredRideRequest,
+    } as QueryAllStoredRideRequest;
+    if (object.pagination !== undefined && object.pagination !== null) {
+      message.pagination = PageRequest.fromJSON(object.pagination);
+    } else {
+      message.pagination = undefined;
+    }
+    return message;
+  },
+
+  toJSON(message: QueryAllStoredRideRequest): unknown {
+    const obj: any = {};
+    message.pagination !== undefined &&
+      (obj.pagination = message.pagination
+        ? PageRequest.toJSON(message.pagination)
+        : undefined);
+    return obj;
+  },
+
+  fromPartial(
+    object: DeepPartial<QueryAllStoredRideRequest>
+  ): QueryAllStoredRideRequest {
+    const message = {
+      ...baseQueryAllStoredRideRequest,
+    } as QueryAllStoredRideRequest;
+    if (object.pagination !== undefined && object.pagination !== null) {
+      message.pagination = PageRequest.fromPartial(object.pagination);
+    } else {
+      message.pagination = undefined;
+    }
+    return message;
+  },
+};
+
+const baseQueryAllStoredRideResponse: object = {};
+
+export const QueryAllStoredRideResponse = {
+  encode(
+    message: QueryAllStoredRideResponse,
+    writer: Writer = Writer.create()
+  ): Writer {
+    for (const v of message.storedRide) {
+      StoredRide.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.pagination !== undefined) {
+      PageResponse.encode(
+        message.pagination,
+        writer.uint32(18).fork()
+      ).ldelim();
+    }
+    return writer;
+  },
+
+  decode(
+    input: Reader | Uint8Array,
+    length?: number
+  ): QueryAllStoredRideResponse {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = {
+      ...baseQueryAllStoredRideResponse,
+    } as QueryAllStoredRideResponse;
+    message.storedRide = [];
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.storedRide.push(StoredRide.decode(reader, reader.uint32()));
+          break;
+        case 2:
+          message.pagination = PageResponse.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryAllStoredRideResponse {
+    const message = {
+      ...baseQueryAllStoredRideResponse,
+    } as QueryAllStoredRideResponse;
+    message.storedRide = [];
+    if (object.storedRide !== undefined && object.storedRide !== null) {
+      for (const e of object.storedRide) {
+        message.storedRide.push(StoredRide.fromJSON(e));
+      }
+    }
+    if (object.pagination !== undefined && object.pagination !== null) {
+      message.pagination = PageResponse.fromJSON(object.pagination);
+    } else {
+      message.pagination = undefined;
+    }
+    return message;
+  },
+
+  toJSON(message: QueryAllStoredRideResponse): unknown {
+    const obj: any = {};
+    if (message.storedRide) {
+      obj.storedRide = message.storedRide.map((e) =>
+        e ? StoredRide.toJSON(e) : undefined
+      );
+    } else {
+      obj.storedRide = [];
+    }
+    message.pagination !== undefined &&
+      (obj.pagination = message.pagination
+        ? PageResponse.toJSON(message.pagination)
+        : undefined);
+    return obj;
+  },
+
+  fromPartial(
+    object: DeepPartial<QueryAllStoredRideResponse>
+  ): QueryAllStoredRideResponse {
+    const message = {
+      ...baseQueryAllStoredRideResponse,
+    } as QueryAllStoredRideResponse;
+    message.storedRide = [];
+    if (object.storedRide !== undefined && object.storedRide !== null) {
+      for (const e of object.storedRide) {
+        message.storedRide.push(StoredRide.fromPartial(e));
+      }
+    }
+    if (object.pagination !== undefined && object.pagination !== null) {
+      message.pagination = PageResponse.fromPartial(object.pagination);
+    } else {
+      message.pagination = undefined;
+    }
+    return message;
+  },
+};
+
 /** Query defines the gRPC querier service. */
 export interface Query {
   /** Parameters queries the parameters of the module. */
   Params(request: QueryParamsRequest): Promise<QueryParamsResponse>;
   /** Queries a NextRide by index. */
   NextRide(request: QueryGetNextRideRequest): Promise<QueryGetNextRideResponse>;
+  /** Queries a StoredRide by index. */
+  StoredRide(
+    request: QueryGetStoredRideRequest
+  ): Promise<QueryGetStoredRideResponse>;
+  /** Queries a list of StoredRide items. */
+  StoredRideAll(
+    request: QueryAllStoredRideRequest
+  ): Promise<QueryAllStoredRideResponse>;
 }
 
 export class QueryClientImpl implements Query {
@@ -269,6 +613,34 @@ export class QueryClientImpl implements Query {
     );
     return promise.then((data) =>
       QueryGetNextRideResponse.decode(new Reader(data))
+    );
+  }
+
+  StoredRide(
+    request: QueryGetStoredRideRequest
+  ): Promise<QueryGetStoredRideResponse> {
+    const data = QueryGetStoredRideRequest.encode(request).finish();
+    const promise = this.rpc.request(
+      "smarshallspitzbart.ride.ride.Query",
+      "StoredRide",
+      data
+    );
+    return promise.then((data) =>
+      QueryGetStoredRideResponse.decode(new Reader(data))
+    );
+  }
+
+  StoredRideAll(
+    request: QueryAllStoredRideRequest
+  ): Promise<QueryAllStoredRideResponse> {
+    const data = QueryAllStoredRideRequest.encode(request).finish();
+    const promise = this.rpc.request(
+      "smarshallspitzbart.ride.ride.Query",
+      "StoredRideAll",
+      data
+    );
+    return promise.then((data) =>
+      QueryAllStoredRideResponse.decode(new Reader(data))
     );
   }
 }

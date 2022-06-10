@@ -4,6 +4,7 @@ package smarshallspitzbart.ride.ride;
 import "gogoproto/gogo.proto";
 import "ride/params.proto";
 import "ride/next_ride.proto";
+import "ride/stored_ride.proto";
 // this line is used by starport scaffolding # genesis/proto/import
 
 option go_package = "github.com/smarshall-spitzbart/ride/x/ride/types";
@@ -12,5 +13,6 @@ option go_package = "github.com/smarshall-spitzbart/ride/x/ride/types";
 message GenesisState {
   Params params = 1 [(gogoproto.nullable) = false];
   NextRide nextRide = 2;
+  repeated StoredRide storedRideList = 3 [(gogoproto.nullable) = false];
   // this line is used by starport scaffolding # genesis/proto/state
 }

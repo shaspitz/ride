@@ -17,6 +17,14 @@ func TestGenesis(t *testing.T) {
 		NextRide: &types.NextRide{
 			IdValue: 69,
 		},
+		StoredRideList: []types.StoredRide{
+			{
+				Index: "0",
+			},
+			{
+				Index: "1",
+			},
+		},
 		// this line is used by starport scaffolding # genesis/test/state
 	}
 
@@ -29,5 +37,6 @@ func TestGenesis(t *testing.T) {
 	nullify.Fill(got)
 
 	require.Equal(t, genesisState.NextRide, got.NextRide)
+	require.ElementsMatch(t, genesisState.StoredRideList, got.StoredRideList)
 	// this line is used by starport scaffolding # genesis/test/assert
 }

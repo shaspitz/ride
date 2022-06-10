@@ -25,9 +25,31 @@ func TestGenesisState_Validate(t *testing.T) {
 				NextRide: &types.NextRide{
 					IdValue: 78,
 				},
+				StoredRideList: []types.StoredRide{
+					{
+						Index: "0",
+					},
+					{
+						Index: "1",
+					},
+				},
 				// this line is used by starport scaffolding # types/genesis/validField
 			},
 			valid: true,
+		},
+		{
+			desc: "duplicated storedRide",
+			genState: &types.GenesisState{
+				StoredRideList: []types.StoredRide{
+					{
+						Index: "0",
+					},
+					{
+						Index: "0",
+					},
+				},
+			},
+			valid: false,
 		},
 		// this line is used by starport scaffolding # types/genesis/testcase
 	} {

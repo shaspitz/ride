@@ -1,0 +1,16 @@
+syntax = "proto3";
+package smarshallspitzbart.ride.ride;
+
+option go_package = "github.com/smarshall-spitzbart/ride/x/ride/types";
+
+message StoredRide {
+  string index = 1; 
+  string destination = 2; 
+  string driver = 3; 
+  string passenger = 4; 
+  uint64 mutualStake = 5; 
+  uint64 payPerHour = 6; 
+  uint64 distanceTip = 7; 
+  
+}
+

@@ -6,6 +6,7 @@ import "google/api/annotations.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
 import "ride/params.proto";
 import "ride/next_ride.proto";
+import "ride/stored_ride.proto";
 // this line is used by starport scaffolding # 1
 
 option go_package = "github.com/smarshall-spitzbart/ride/x/ride/types";
@@ -20,6 +21,16 @@ service Query {
 	rpc NextRide(QueryGetNextRideRequest) returns (QueryGetNextRideResponse) {
 		option (google.api.http).get = "/smarshall-spitzbart/ride/ride/next_ride";
 	}
+// Queries a StoredRide by index.
+	rpc StoredRide(QueryGetStoredRideRequest) returns (QueryGetStoredRideResponse) {
+		option (google.api.http).get = "/smarshall-spitzbart/ride/ride/stored_ride/{index}";
+	}
+
+	// Queries a list of StoredRide items.
+	rpc StoredRideAll(QueryAllStoredRideRequest) returns (QueryAllStoredRideResponse) {
+		option (google.api.http).get = "/smarshall-spitzbart/ride/ride/stored_ride";
+	}
+
 // this line is used by starport scaffolding # 2
 }
 
@@ -37,4 +48,22 @@ message QueryGetNextRideRequest {}
 message QueryGetNextRideResponse {
 	NextRide NextRide = 1 [(gogoproto.nullable) = false];
 }
+message QueryGetStoredRideRequest {
+	  string index = 1;
+
+}
+
+message QueryGetStoredRideResponse {
+	StoredRide storedRide = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryAllStoredRideRequest {
+	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllStoredRideResponse {
+	repeated StoredRide storedRide = 1 [(gogoproto.nullable) = false];
+	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
 // this line is used by starport scaffolding # 3
