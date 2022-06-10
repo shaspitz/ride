@@ -12,7 +12,7 @@ const (
 	bob   = "cosmos1xyxs3skf3f4jfqeuv89yyaqvjc6lffavxqhc8g"
 )
 
-func GetStoredGameExample() *StoredRide {
+func GetStoredRideExample() *StoredRide {
 	return &StoredRide{
 		Driver:    alice,
 		Passenger: bob,
@@ -22,8 +22,8 @@ func GetStoredGameExample() *StoredRide {
 func TestCanGetDriverAndPassengerAccount(t *testing.T) {
 	aliceAddress, err1 := sdk.AccAddressFromBech32(alice)
 	bobAddress, err2 := sdk.AccAddressFromBech32(bob)
-	driver, err3 := GetStoredGameExample().GetDriverAddress()
-	passenger, err4 := GetStoredGameExample().GetPassengerAddress()
+	driver, err3 := GetStoredRideExample().GetDriverAddress()
+	passenger, err4 := GetStoredRideExample().GetPassengerAddress()
 	require.Equal(t, aliceAddress, driver)
 	require.Equal(t, bobAddress, passenger)
 	require.Nil(t, err1)
