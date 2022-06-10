@@ -50915,6 +50915,11 @@ definitions:
     description: >-
       QueryAppVersionResponse is the response type for the Query/AppVersion RPC
       method.
+  smarshallspitzbart.ride.ride.MsgRequestRideResponse:
+    type: object
+    properties:
+      idValue:
+        type: string
   smarshallspitzbart.ride.ride.NextRide:
     type: object
     properties:

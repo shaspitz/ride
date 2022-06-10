@@ -13,6 +13,10 @@ export interface ProtobufAny {
   "@type"?: string;
 }
 
+export interface RideMsgRequestRideResponse {
+  idValue?: string;
+}
+
 export interface RideNextRide {
   /** @format uint64 */
   idValue?: string;

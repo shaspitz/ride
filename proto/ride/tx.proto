@@ -7,7 +7,21 @@ option go_package = "github.com/smarshall-spitzbart/ride/x/ride/types";
 
 // Msg defines the Msg service.
 service Msg {
-    // this line is used by starport scaffolding # proto/tx/rpc
+      rpc RequestRide(MsgRequestRide) returns (MsgRequestRideResponse);
+// this line is used by starport scaffolding # proto/tx/rpc
+}
+
+message MsgRequestRide {
+  string creator = 1;
+  string startLocation = 2;
+  string destination = 3;
+  uint64 mutualStake = 4;
+  uint64 hourlyPay = 5;
+  uint64 distanceTip = 6;
+}
+
+message MsgRequestRideResponse {
+  string idValue = 1;
 }
 
 // this line is used by starport scaffolding # proto/tx/message
