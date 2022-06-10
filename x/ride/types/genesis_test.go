@@ -63,3 +63,12 @@ func TestGenesisState_Validate(t *testing.T) {
 		})
 	}
 }
+
+func TestDefaultGenesisIsCorrect(t *testing.T) {
+	require.EqualValues(t,
+		&types.GenesisState{
+			StoredRideList: []types.StoredRide{},
+			NextRide:       &types.NextRide{uint64(1)},
+		},
+		types.DefaultGenesis())
+}
