@@ -42,6 +42,16 @@ func (k msgServer) Accept(goCtx context.Context, msg *types.MsgAccept) (*types.M
 	// Store ride via keeper.
 	k.Keeper.SetStoredRide(ctx, storedRide)
 
+	// Emit appropriate event for ride acceptance.
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(sdk.EventTypeMessage,
+			sdk.NewAttribute(sdk.AttributeKeyModule, types.ModuleName),
+			sdk.NewAttribute(sdk.AttributeKeyAction, types.AcceptRideEventKey),
+			sdk.NewAttribute(types.AcceptRideEventDriver, storedRide.Driver),
+			sdk.NewAttribute(types.AcceptRideEventIdValue, storedRide.Index),
+		),
+	)
+
 	return &types.MsgAcceptResponse{Success: true}, nil
 }
 

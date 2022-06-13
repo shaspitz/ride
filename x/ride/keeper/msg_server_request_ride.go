@@ -53,6 +53,17 @@ func (k msgServer) RequestRide(goCtx context.Context, msg *types.MsgRequestRide)
 	nextRide.IdValue++
 	k.Keeper.SetNextRide(ctx, nextRide)
 
+	// Emit appropriate event with starting location of ride.
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(sdk.EventTypeMessage,
+			sdk.NewAttribute(sdk.AttributeKeyModule, types.ModuleName),
+			sdk.NewAttribute(sdk.AttributeKeyAction, types.RequestRideEventKey),
+			sdk.NewAttribute(types.RequestRideEventPassenger, storedRide.Passenger),
+			sdk.NewAttribute(types.RequestRideEventIndex, storedRide.Index),
+			sdk.NewAttribute(types.RequestRideStartLocation, msg.StartLocation),
+		),
+	)
+
 	return &types.MsgRequestRideResponse{
 		IdValue: newRideIndex,
 	}, nil

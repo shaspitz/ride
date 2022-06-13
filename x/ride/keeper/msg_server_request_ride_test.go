@@ -74,3 +74,30 @@ func TestRideRequestStorage(t *testing.T) {
 }
 
 // TODO: Make tests for the functionality that'll be included in "ValidateRequestRide"
+
+func TestRequestRideEventEmitted(t *testing.T) {
+	msgServer, _, context := setupMsgServerRequestRide(t)
+	msgServer.RequestRide(context, &types.MsgRequestRide{
+		Creator:       alice,
+		StartLocation: "some loc",
+		Destination:   "some dest",
+		MutualStake:   30,
+		HourlyPay:     15,
+		DistanceTip:   5,
+	})
+	ctx := sdk.UnwrapSDKContext(context)
+	require.NotNil(t, ctx)
+	events := sdk.StringifyEvents(ctx.EventManager().ABCIEvents())
+	require.Len(t, events, 1)
+	event := events[0]
+	require.EqualValues(t, sdk.StringEvent{
+		Type: "message",
+		Attributes: []sdk.Attribute{
+			{Key: "module", Value: "ride"},
+			{Key: "action", Value: "NewRideRequest"},
+			{Key: "Passenger", Value: alice},
+			{Key: "Index", Value: "1"},
+			{Key: "StartLocation", Value: "some loc"},
+		},
+	}, event)
+}

@@ -24,3 +24,16 @@ func KeyPrefix(p string) []byte {
 const (
 	NextRideKey = "NextRide-value-"
 )
+
+const (
+	RequestRideEventKey       = "NewRideRequest"
+	RequestRideEventPassenger = "Passenger"
+	RequestRideEventIndex     = "Index"
+	RequestRideStartLocation  = "StartLocation"
+)
+
+const (
+	AcceptRideEventKey     = "RideAccepted"
+	AcceptRideEventDriver  = "Driver"
+	AcceptRideEventIdValue = "IdValue"
+)

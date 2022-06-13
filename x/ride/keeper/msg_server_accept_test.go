@@ -79,3 +79,23 @@ func TestAcceptRideStorage(t *testing.T) {
 }
 
 // TODO: Make tests for the functionality that'll be included in "ValidateRequestRide"
+
+func TestAcceptRideEventEmitted(t *testing.T) {
+	msgServer, _, context := setupMsgServerAcceptRide(t)
+	msgServer.Accept(context, &types.MsgAccept{
+		Creator: bob,
+		IdValue: "1",
+	})
+	ctx := sdk.UnwrapSDKContext(context)
+	require.NotNil(t, ctx)
+	events := sdk.StringifyEvents(ctx.EventManager().ABCIEvents())
+	require.Len(t, events, 1)
+	// Throw out attributes 0 through 4, coming from request ride event.
+	event := events[0]
+	require.EqualValues(t, []sdk.Attribute{
+		{Key: "module", Value: "ride"},
+		{Key: "action", Value: "RideAccepted"},
+		{Key: "Driver", Value: bob},
+		{Key: "IdValue", Value: "1"},
+	}, event.Attributes[5:])
+}
