@@ -17,6 +17,15 @@ export interface MsgRequestRideResponse {
   idValue: string;
 }
 
+export interface MsgAccept {
+  creator: string;
+  idValue: string;
+}
+
+export interface MsgAcceptResponse {
+  success: boolean;
+}
+
 const baseMsgRequestRide: object = {
   creator: "",
   startLocation: "",
@@ -228,10 +237,138 @@ export const MsgRequestRideResponse = {
   },
 };
 
+const baseMsgAccept: object = { creator: "", idValue: "" };
+
+export const MsgAccept = {
+  encode(message: MsgAccept, writer: Writer = Writer.create()): Writer {
+    if (message.creator !== "") {
+      writer.uint32(10).string(message.creator);
+    }
+    if (message.idValue !== "") {
+      writer.uint32(18).string(message.idValue);
+    }
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): MsgAccept {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseMsgAccept } as MsgAccept;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.creator = reader.string();
+          break;
+        case 2:
+          message.idValue = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MsgAccept {
+    const message = { ...baseMsgAccept } as MsgAccept;
+    if (object.creator !== undefined && object.creator !== null) {
+      message.creator = String(object.creator);
+    } else {
+      message.creator = "";
+    }
+    if (object.idValue !== undefined && object.idValue !== null) {
+      message.idValue = String(object.idValue);
+    } else {
+      message.idValue = "";
+    }
+    return message;
+  },
+
+  toJSON(message: MsgAccept): unknown {
+    const obj: any = {};
+    message.creator !== undefined && (obj.creator = message.creator);
+    message.idValue !== undefined && (obj.idValue = message.idValue);
+    return obj;
+  },
+
+  fromPartial(object: DeepPartial<MsgAccept>): MsgAccept {
+    const message = { ...baseMsgAccept } as MsgAccept;
+    if (object.creator !== undefined && object.creator !== null) {
+      message.creator = object.creator;
+    } else {
+      message.creator = "";
+    }
+    if (object.idValue !== undefined && object.idValue !== null) {
+      message.idValue = object.idValue;
+    } else {
+      message.idValue = "";
+    }
+    return message;
+  },
+};
+
+const baseMsgAcceptResponse: object = { success: false };
+
+export const MsgAcceptResponse = {
+  encode(message: MsgAcceptResponse, writer: Writer = Writer.create()): Writer {
+    if (message.success === true) {
+      writer.uint32(8).bool(message.success);
+    }
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): MsgAcceptResponse {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseMsgAcceptResponse } as MsgAcceptResponse;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.success = reader.bool();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MsgAcceptResponse {
+    const message = { ...baseMsgAcceptResponse } as MsgAcceptResponse;
+    if (object.success !== undefined && object.success !== null) {
+      message.success = Boolean(object.success);
+    } else {
+      message.success = false;
+    }
+    return message;
+  },
+
+  toJSON(message: MsgAcceptResponse): unknown {
+    const obj: any = {};
+    message.success !== undefined && (obj.success = message.success);
+    return obj;
+  },
+
+  fromPartial(object: DeepPartial<MsgAcceptResponse>): MsgAcceptResponse {
+    const message = { ...baseMsgAcceptResponse } as MsgAcceptResponse;
+    if (object.success !== undefined && object.success !== null) {
+      message.success = object.success;
+    } else {
+      message.success = false;
+    }
+    return message;
+  },
+};
+
 /** Msg defines the Msg service. */
 export interface Msg {
-  /** this line is used by starport scaffolding # proto/tx/rpc */
   RequestRide(request: MsgRequestRide): Promise<MsgRequestRideResponse>;
+  /** this line is used by starport scaffolding # proto/tx/rpc */
+  Accept(request: MsgAccept): Promise<MsgAcceptResponse>;
 }
 
 export class MsgClientImpl implements Msg {
@@ -249,6 +386,16 @@ export class MsgClientImpl implements Msg {
     return promise.then((data) =>
       MsgRequestRideResponse.decode(new Reader(data))
     );
+  }
+
+  Accept(request: MsgAccept): Promise<MsgAcceptResponse> {
+    const data = MsgAccept.encode(request).finish();
+    const promise = this.rpc.request(
+      "smarshallspitzbart.ride.ride.Msg",
+      "Accept",
+      data
+    );
+    return promise.then((data) => MsgAcceptResponse.decode(new Reader(data)));
   }
 }
 

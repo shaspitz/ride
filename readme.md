@@ -14,6 +14,9 @@ rided query ride show-next-ride
 ```
 rided query ride show-stored-ride 1
 ```
+```
+rided tx ride accept 1 --from bob --gas auto
+```
 
 ## Get started
 

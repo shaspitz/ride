@@ -8,6 +8,7 @@ option go_package = "github.com/smarshall-spitzbart/ride/x/ride/types";
 // Msg defines the Msg service.
 service Msg {
       rpc RequestRide(MsgRequestRide) returns (MsgRequestRideResponse);
+  rpc Accept(MsgAccept) returns (MsgAcceptResponse);
 // this line is used by starport scaffolding # proto/tx/rpc
 }
 
@@ -22,6 +23,15 @@ message MsgRequestRide {
 
 message MsgRequestRideResponse {
   string idValue = 1;
+}
+
+message MsgAccept {
+  string creator = 1;
+  string idValue = 2;
+}
+
+message MsgAcceptResponse {
+  bool success = 1;
 }
 
 // this line is used by starport scaffolding # proto/tx/message

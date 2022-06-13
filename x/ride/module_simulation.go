@@ -28,6 +28,10 @@ const (
 	// TODO: Determine the simulation weight value
 	defaultWeightMsgRequestRide int = 100
 
+	opWeightMsgAccept = "op_weight_msg_accept"
+	// TODO: Determine the simulation weight value
+	defaultWeightMsgAccept int = 100
+
 	// this line is used by starport scaffolding # simapp/module/const
 )
 
@@ -71,6 +75,17 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	operations = append(operations, simulation.NewWeightedOperation(
 		weightMsgRequestRide,
 		ridesimulation.SimulateMsgRequestRide(am.accountKeeper, am.bankKeeper, am.keeper),
+	))
+
+	var weightMsgAccept int
+	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgAccept, &weightMsgAccept, nil,
+		func(_ *rand.Rand) {
+			weightMsgAccept = defaultWeightMsgAccept
+		},
+	)
+	operations = append(operations, simulation.NewWeightedOperation(
+		weightMsgAccept,
+		ridesimulation.SimulateMsgAccept(am.accountKeeper, am.bankKeeper, am.keeper),
 	))
 
 	// this line is used by starport scaffolding # simapp/module/operation

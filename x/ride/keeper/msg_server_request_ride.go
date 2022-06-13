@@ -37,11 +37,14 @@ func (k msgServer) RequestRide(goCtx context.Context, msg *types.MsgRequestRide)
 		DistanceTip: msg.DistanceTip,
 	}
 
-	// Validate that passenger address can be obtained from stored ride.
+	// Validate assigned passenger address.
 	_, err = storedRide.GetPassengerAddress()
 	if err != nil {
 		return nil, err
 	}
+
+	// TODO: Assign mutual stake to the bank keeper, write tests to see if this whole method runs atomically..
+	// Ie. if an error is returned, does the state just get thrown out by the any validator who executes the msg?
 
 	// Store ride via keeper.
 	k.Keeper.SetStoredRide(ctx, storedRide)
@@ -57,15 +60,13 @@ func (k msgServer) RequestRide(goCtx context.Context, msg *types.MsgRequestRide)
 
 // Validation of RequestRide message handler, in its own method
 // per https://docs.cosmos.network/main/building-modules/msg-services.html#validation
+//
+// NOTE: Oracle validation would exist here for starting location.
 func ValidateRequestRide(msg *types.MsgRequestRide) error {
-
-	// Oracle validation would exist here for starting location.
 
 	// TODO: Enforce mutual stake is above some config, etc.
 	// TODO: Enforce that passenger actually possesses mutual stake set by Tx.
 	// TODO: Charge any gas here?
 	// TODO: Set expiration time for the request?? and store in state??
-	// The above check also belongs in the acceptance Tx.
-
 	return nil
 }

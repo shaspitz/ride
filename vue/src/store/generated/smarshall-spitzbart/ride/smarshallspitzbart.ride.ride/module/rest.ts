@@ -13,6 +13,10 @@ export interface ProtobufAny {
   "@type"?: string;
 }
 
+export interface RideMsgAcceptResponse {
+  success?: boolean;
+}
+
 export interface RideMsgRequestRideResponse {
   idValue?: string;
 }
