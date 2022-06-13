@@ -4,8 +4,16 @@
 ## TLDR
 Focuses on the business logic for such an idea, with the assumption that a [proof-of-location](https://tokens-economy.gitbook.io/consensus/chain-based-proof-of-capacity-space/dynamic-proof-of-location) like system would be implemented elsewhere. 
 
-## Application CLI Commands
-TODO
+## Application CLI Commands (WIP)
+```
+rided tx ride request-ride "some dest" "some other dest" 50 5 5 --from alice --gas auto
+```
+```
+rided query ride show-next-ride
+```
+```
+rided query ride show-stored-ride 1
+```
 
 ## Get started
 
