@@ -11,18 +11,24 @@ import (
 func (k msgServer) Finish(goCtx context.Context, msg *types.MsgFinish) (*types.MsgFinishResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	err := ValidateFinishRide(msg)
-	if err != nil {
-		return nil, err
-	}
-
 	storedRide, found := k.Keeper.GetStoredRide(ctx, msg.IdValue)
 	if !found {
 		return &types.MsgFinishResponse{Success: false},
 			errors.Wrapf(types.ErrRideNotFound, "ride not found with Id: %s", msg.IdValue)
 	}
 
-	// TODO: Auto execution timer?
+	err := ValidateFinishRide(msg, storedRide)
+	if err != nil {
+		return nil, err
+	}
+
+	if !storedRide.HasAssignedDriver() {
+		// TODO: No driver accepted yet in this case. Return funds and erase game.
+		_ = ctx
+		k.Keeper.RemoveStoredRide(ctx, msg.IdValue)
+	}
+
+	// TODO: Auto execution timer? Where payments are made after a timeout!!
 
 	storedRide.FinishTime = types.TimeToString(ctx.BlockTime())
 	storedRide.FinishLocation = msg.Location
@@ -41,8 +47,11 @@ func (k msgServer) Finish(goCtx context.Context, msg *types.MsgFinish) (*types.M
 	return &types.MsgFinishResponse{Success: true}, nil
 }
 
-// TODO: Populate this
-func ValidateFinishRide(msg *types.MsgFinish) error {
-
+// TODO: Unit test
+func ValidateFinishRide(msg *types.MsgFinish, storedRide types.StoredRide) error {
+	if msg.Creator != storedRide.Passenger && msg.Creator != storedRide.Driver {
+		return errors.Wrapf(types.ErrIrrelevantRide, "%s is not associated with game %s",
+			msg.Creator, msg.IdValue)
+	}
 	return nil
 }

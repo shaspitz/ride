@@ -14,5 +14,6 @@ var (
 	ErrAssignedDriver   = sdkerrors.Register(ModuleName, 1103, "driver has already been assigned for this ride")
 	ErrInvalidPassenger = sdkerrors.Register(ModuleName, 1104, "passenger address is invalid")
 	ErrRideNotFound     = sdkerrors.Register(ModuleName, 1105, "ride by id not found, it may have expired")
-	ErrCantParseTime    = sdkerrors.Register(ModuleName, 1107, "cant parse time from string %s")
+	ErrCantParseTime    = sdkerrors.Register(ModuleName, 1106, "cant parse time from string %s")
+	ErrIrrelevantRide   = sdkerrors.Register(ModuleName, 1107, "msg creator not passenger or driver for this ride")
 )
