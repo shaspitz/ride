@@ -8,9 +8,12 @@ message StoredRide {
   string destination = 2; 
   string driver = 3; 
   string passenger = 4; 
-  uint64 mutualStake = 5; 
-  uint64 payPerHour = 6; 
-  uint64 distanceTip = 7; 
+  string acceptanceTime = 5;
+  string finishTime = 6;
+  string finishLocation = 7;
+  uint64 mutualStake = 8; 
+  uint64 payPerHour = 9; 
+  uint64 distanceTip = 10; 
   
 }
 

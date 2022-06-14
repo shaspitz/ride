@@ -29596,6 +29596,8 @@ paths:
                       type: string
                     passenger:
                       type: string
+                    acceptanceTime:
+                      type: string
                     mutualStake:
                       type: string
                       format: uint64
@@ -29729,6 +29731,8 @@ paths:
                   driver:
                     type: string
                   passenger:
+                    type: string
+                  acceptanceTime:
                     type: string
                   mutualStake:
                     type: string
@@ -50920,6 +50924,8 @@ definitions:
     properties:
       success:
         type: boolean
+  smarshallspitzbart.ride.ride.MsgFinishResponse:
+    type: object
   smarshallspitzbart.ride.ride.MsgRequestRideResponse:
     type: object
     properties:
@@ -50949,6 +50955,8 @@ definitions:
             driver:
               type: string
             passenger:
+              type: string
+            acceptanceTime:
               type: string
             mutualStake:
               type: string
@@ -51007,6 +51015,8 @@ definitions:
             type: string
           passenger:
             type: string
+          acceptanceTime:
+            type: string
           mutualStake:
             type: string
             format: uint64
@@ -51033,6 +51043,8 @@ definitions:
       driver:
         type: string
       passenger:
+        type: string
+      acceptanceTime:
         type: string
       mutualStake:
         type: string

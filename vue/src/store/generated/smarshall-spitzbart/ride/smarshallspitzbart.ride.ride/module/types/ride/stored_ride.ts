@@ -9,6 +9,7 @@ export interface StoredRide {
   destination: string;
   driver: string;
   passenger: string;
+  acceptanceTime: string;
   mutualStake: number;
   payPerHour: number;
   distanceTip: number;
@@ -19,6 +20,7 @@ const baseStoredRide: object = {
   destination: "",
   driver: "",
   passenger: "",
+  acceptanceTime: "",
   mutualStake: 0,
   payPerHour: 0,
   distanceTip: 0,
@@ -38,14 +40,17 @@ export const StoredRide = {
     if (message.passenger !== "") {
       writer.uint32(34).string(message.passenger);
     }
+    if (message.acceptanceTime !== "") {
+      writer.uint32(42).string(message.acceptanceTime);
+    }
     if (message.mutualStake !== 0) {
-      writer.uint32(40).uint64(message.mutualStake);
+      writer.uint32(48).uint64(message.mutualStake);
     }
     if (message.payPerHour !== 0) {
-      writer.uint32(48).uint64(message.payPerHour);
+      writer.uint32(56).uint64(message.payPerHour);
     }
     if (message.distanceTip !== 0) {
-      writer.uint32(56).uint64(message.distanceTip);
+      writer.uint32(64).uint64(message.distanceTip);
     }
     return writer;
   },
@@ -70,12 +75,15 @@ export const StoredRide = {
           message.passenger = reader.string();
           break;
         case 5:
-          message.mutualStake = longToNumber(reader.uint64() as Long);
+          message.acceptanceTime = reader.string();
           break;
         case 6:
-          message.payPerHour = longToNumber(reader.uint64() as Long);
+          message.mutualStake = longToNumber(reader.uint64() as Long);
           break;
         case 7:
+          message.payPerHour = longToNumber(reader.uint64() as Long);
+          break;
+        case 8:
           message.distanceTip = longToNumber(reader.uint64() as Long);
           break;
         default:
@@ -108,6 +116,11 @@ export const StoredRide = {
     } else {
       message.passenger = "";
     }
+    if (object.acceptanceTime !== undefined && object.acceptanceTime !== null) {
+      message.acceptanceTime = String(object.acceptanceTime);
+    } else {
+      message.acceptanceTime = "";
+    }
     if (object.mutualStake !== undefined && object.mutualStake !== null) {
       message.mutualStake = Number(object.mutualStake);
     } else {
@@ -133,6 +146,8 @@ export const StoredRide = {
       (obj.destination = message.destination);
     message.driver !== undefined && (obj.driver = message.driver);
     message.passenger !== undefined && (obj.passenger = message.passenger);
+    message.acceptanceTime !== undefined &&
+      (obj.acceptanceTime = message.acceptanceTime);
     message.mutualStake !== undefined &&
       (obj.mutualStake = message.mutualStake);
     message.payPerHour !== undefined && (obj.payPerHour = message.payPerHour);
@@ -162,6 +177,11 @@ export const StoredRide = {
       message.passenger = object.passenger;
     } else {
       message.passenger = "";
+    }
+    if (object.acceptanceTime !== undefined && object.acceptanceTime !== null) {
+      message.acceptanceTime = object.acceptanceTime;
+    } else {
+      message.acceptanceTime = "";
     }
     if (object.mutualStake !== undefined && object.mutualStake !== null) {
       message.mutualStake = object.mutualStake;

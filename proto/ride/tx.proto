@@ -9,6 +9,7 @@ option go_package = "github.com/smarshall-spitzbart/ride/x/ride/types";
 service Msg {
       rpc RequestRide(MsgRequestRide) returns (MsgRequestRideResponse);
   rpc Accept(MsgAccept) returns (MsgAcceptResponse);
+  rpc Finish(MsgFinish) returns (MsgFinishResponse);
 // this line is used by starport scaffolding # proto/tx/rpc
 }
 
@@ -31,6 +32,16 @@ message MsgAccept {
 }
 
 message MsgAcceptResponse {
+  bool success = 1;
+}
+
+message MsgFinish {
+  string creator = 1;
+  string idValue = 2;
+  string location = 3;
+}
+
+message MsgFinishResponse {
   bool success = 1;
 }
 

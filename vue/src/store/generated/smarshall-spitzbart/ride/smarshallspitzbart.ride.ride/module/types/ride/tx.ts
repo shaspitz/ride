@@ -26,6 +26,14 @@ export interface MsgAcceptResponse {
   success: boolean;
 }
 
+export interface MsgFinish {
+  creator: string;
+  idValue: string;
+  endLocation: string;
+}
+
+export interface MsgFinishResponse {}
+
 const baseMsgRequestRide: object = {
   creator: "",
   startLocation: "",
@@ -364,11 +372,140 @@ export const MsgAcceptResponse = {
   },
 };
 
+const baseMsgFinish: object = { creator: "", idValue: "", endLocation: "" };
+
+export const MsgFinish = {
+  encode(message: MsgFinish, writer: Writer = Writer.create()): Writer {
+    if (message.creator !== "") {
+      writer.uint32(10).string(message.creator);
+    }
+    if (message.idValue !== "") {
+      writer.uint32(18).string(message.idValue);
+    }
+    if (message.endLocation !== "") {
+      writer.uint32(26).string(message.endLocation);
+    }
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): MsgFinish {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseMsgFinish } as MsgFinish;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.creator = reader.string();
+          break;
+        case 2:
+          message.idValue = reader.string();
+          break;
+        case 3:
+          message.endLocation = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MsgFinish {
+    const message = { ...baseMsgFinish } as MsgFinish;
+    if (object.creator !== undefined && object.creator !== null) {
+      message.creator = String(object.creator);
+    } else {
+      message.creator = "";
+    }
+    if (object.idValue !== undefined && object.idValue !== null) {
+      message.idValue = String(object.idValue);
+    } else {
+      message.idValue = "";
+    }
+    if (object.endLocation !== undefined && object.endLocation !== null) {
+      message.endLocation = String(object.endLocation);
+    } else {
+      message.endLocation = "";
+    }
+    return message;
+  },
+
+  toJSON(message: MsgFinish): unknown {
+    const obj: any = {};
+    message.creator !== undefined && (obj.creator = message.creator);
+    message.idValue !== undefined && (obj.idValue = message.idValue);
+    message.endLocation !== undefined &&
+      (obj.endLocation = message.endLocation);
+    return obj;
+  },
+
+  fromPartial(object: DeepPartial<MsgFinish>): MsgFinish {
+    const message = { ...baseMsgFinish } as MsgFinish;
+    if (object.creator !== undefined && object.creator !== null) {
+      message.creator = object.creator;
+    } else {
+      message.creator = "";
+    }
+    if (object.idValue !== undefined && object.idValue !== null) {
+      message.idValue = object.idValue;
+    } else {
+      message.idValue = "";
+    }
+    if (object.endLocation !== undefined && object.endLocation !== null) {
+      message.endLocation = object.endLocation;
+    } else {
+      message.endLocation = "";
+    }
+    return message;
+  },
+};
+
+const baseMsgFinishResponse: object = {};
+
+export const MsgFinishResponse = {
+  encode(_: MsgFinishResponse, writer: Writer = Writer.create()): Writer {
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): MsgFinishResponse {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseMsgFinishResponse } as MsgFinishResponse;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(_: any): MsgFinishResponse {
+    const message = { ...baseMsgFinishResponse } as MsgFinishResponse;
+    return message;
+  },
+
+  toJSON(_: MsgFinishResponse): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  fromPartial(_: DeepPartial<MsgFinishResponse>): MsgFinishResponse {
+    const message = { ...baseMsgFinishResponse } as MsgFinishResponse;
+    return message;
+  },
+};
+
 /** Msg defines the Msg service. */
 export interface Msg {
   RequestRide(request: MsgRequestRide): Promise<MsgRequestRideResponse>;
-  /** this line is used by starport scaffolding # proto/tx/rpc */
   Accept(request: MsgAccept): Promise<MsgAcceptResponse>;
+  /** this line is used by starport scaffolding # proto/tx/rpc */
+  Finish(request: MsgFinish): Promise<MsgFinishResponse>;
 }
 
 export class MsgClientImpl implements Msg {
@@ -396,6 +533,16 @@ export class MsgClientImpl implements Msg {
       data
     );
     return promise.then((data) => MsgAcceptResponse.decode(new Reader(data)));
+  }
+
+  Finish(request: MsgFinish): Promise<MsgFinishResponse> {
+    const data = MsgFinish.encode(request).finish();
+    const promise = this.rpc.request(
+      "smarshallspitzbart.ride.ride.Msg",
+      "Finish",
+      data
+    );
+    return promise.then((data) => MsgFinishResponse.decode(new Reader(data)));
   }
 }
 

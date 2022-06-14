@@ -54,7 +54,7 @@ func TestAcceptRideStorage(t *testing.T) {
 		Success: true,
 	}, *acceptRideResponse)
 	// Ensure stored ride can be accessed from key.
-	game1, found1 := keeper.GetStoredRide(sdk.UnwrapSDKContext(context), "1")
+	ride1, found1 := keeper.GetStoredRide(sdk.UnwrapSDKContext(context), "1")
 	require.True(t, found1)
 	// Ensure no other fields were mutated, and that driver is now assigned.
 	require.EqualValues(t, types.StoredRide{
@@ -65,12 +65,18 @@ func TestAcceptRideStorage(t *testing.T) {
 		MutualStake: 50,
 		PayPerHour:  15,
 		DistanceTip: 10,
-	}, game1)
-	// Ensure driver is assigned via appropriate method.
-	require.True(t, game1.HasAssignedDriver())
+		// Bypass check for acceptance time, test that it's populated below.
+		AcceptanceTime: ride1.AcceptanceTime,
+	}, ride1)
+	require.NotEmpty(t, ride1.AcceptanceTime)
+	require.Empty(t, ride1.FinishTime)
+	require.Empty(t, ride1.FinishLocation)
+	require.True(t, ride1.HasAssignedDriver())
+	require.False(t, ride1.IsFinished())
 	// Finally, ensure that another driver cannot accept the ride.
 	acceptRideResponse, err = msgServer.Accept(context, &types.MsgAccept{
 		Creator: carol,
+		IdValue: "1",
 	})
 	require.NotNil(t, err)
 	require.EqualValues(t, types.MsgAcceptResponse{
@@ -78,7 +84,7 @@ func TestAcceptRideStorage(t *testing.T) {
 	}, *acceptRideResponse)
 }
 
-// TODO: Make tests for the functionality that'll be included in "ValidateRequestRide"
+// TODO: Make tests for the functionality that'll be included in "ValidateAcceptRide"
 
 func TestAcceptRideEventEmitted(t *testing.T) {
 	msgServer, _, context := setupMsgServerAcceptRide(t)
@@ -90,12 +96,12 @@ func TestAcceptRideEventEmitted(t *testing.T) {
 	require.NotNil(t, ctx)
 	events := sdk.StringifyEvents(ctx.EventManager().ABCIEvents())
 	require.Len(t, events, 1)
-	// Throw out attributes 0 through 4, coming from request ride event.
 	event := events[0]
 	require.EqualValues(t, []sdk.Attribute{
 		{Key: "module", Value: "ride"},
 		{Key: "action", Value: "RideAccepted"},
 		{Key: "Driver", Value: bob},
 		{Key: "IdValue", Value: "1"},
+		// Throw out attributes 0 through 4, coming from request ride event.
 	}, event.Attributes[5:])
 }

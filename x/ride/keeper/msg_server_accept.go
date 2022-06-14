@@ -19,12 +19,12 @@ func (k msgServer) Accept(goCtx context.Context, msg *types.MsgAccept) (*types.M
 	storedRide, found := k.Keeper.GetStoredRide(ctx, msg.IdValue)
 	if !found {
 		return &types.MsgAcceptResponse{Success: false},
-			errors.Wrapf(types.ErrRideNotFound, "game not found %s", msg.IdValue)
+			errors.Wrapf(types.ErrRideNotFound, "ride not found %s", msg.IdValue)
 	}
 
 	if storedRide.HasAssignedDriver() {
 		return &types.MsgAcceptResponse{Success: false},
-			errors.Wrapf(types.ErrAssignedDriver, "driver has already been assigned for this ride %s", msg.IdValue)
+			errors.Wrapf(types.ErrAssignedDriver, "driver has already been assigned for ride with Id: %s", msg.IdValue)
 	}
 
 	// Assign driver to ride.
@@ -37,7 +37,13 @@ func (k msgServer) Accept(goCtx context.Context, msg *types.MsgAccept) (*types.M
 			errors.Wrapf(types.ErrInvalidDriver, "invalid driver address %s", msg.IdValue)
 	}
 
-	// TODO: send driver's tokens to escrow, make a test to ensure that this method runs atomically.
+	// Store acceptance time in default format.
+	storedRide.AcceptanceTime = types.TimeToString(ctx.BlockTime())
+
+	// TODO: Assign mutual stake from driver and passenger to the bank keeper,
+	// write tests to see if this whole method runs atomically..
+	// Ie. if an error is returned, does the state just get thrown out by
+	// any validator who executes the msg?
 
 	// Store ride via keeper.
 	k.Keeper.SetStoredRide(ctx, storedRide)

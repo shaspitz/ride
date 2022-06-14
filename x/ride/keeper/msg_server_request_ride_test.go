@@ -69,8 +69,11 @@ func TestRideRequestStorage(t *testing.T) {
 		PayPerHour:  15,
 		DistanceTip: 5,
 	}, ride1)
-	// Ensure no driver is assigned via appropriate method (redundant check in this case).
+	require.Empty(t, ride1.AcceptanceTime)
+	require.Empty(t, ride1.FinishLocation)
+	require.Empty(t, ride1.FinishTime)
 	require.False(t, ride1.HasAssignedDriver())
+	require.False(t, ride1.IsFinished())
 }
 
 // TODO: Make tests for the functionality that'll be included in "ValidateRequestRide"

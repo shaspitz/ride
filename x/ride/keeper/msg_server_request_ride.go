@@ -43,9 +43,6 @@ func (k msgServer) RequestRide(goCtx context.Context, msg *types.MsgRequestRide)
 		return nil, err
 	}
 
-	// TODO: Assign mutual stake to the bank keeper, write tests to see if this whole method runs atomically..
-	// Ie. if an error is returned, does the state just get thrown out by the any validator who executes the msg?
-
 	// Store ride via keeper.
 	k.Keeper.SetStoredRide(ctx, storedRide)
 
