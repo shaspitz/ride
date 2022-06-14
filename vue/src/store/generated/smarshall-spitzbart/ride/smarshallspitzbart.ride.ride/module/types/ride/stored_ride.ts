@@ -10,6 +10,8 @@ export interface StoredRide {
   driver: string;
   passenger: string;
   acceptanceTime: string;
+  finishTime: string;
+  finishLocation: string;
   mutualStake: number;
   payPerHour: number;
   distanceTip: number;
@@ -21,6 +23,8 @@ const baseStoredRide: object = {
   driver: "",
   passenger: "",
   acceptanceTime: "",
+  finishTime: "",
+  finishLocation: "",
   mutualStake: 0,
   payPerHour: 0,
   distanceTip: 0,
@@ -43,14 +47,20 @@ export const StoredRide = {
     if (message.acceptanceTime !== "") {
       writer.uint32(42).string(message.acceptanceTime);
     }
+    if (message.finishTime !== "") {
+      writer.uint32(50).string(message.finishTime);
+    }
+    if (message.finishLocation !== "") {
+      writer.uint32(58).string(message.finishLocation);
+    }
     if (message.mutualStake !== 0) {
-      writer.uint32(48).uint64(message.mutualStake);
+      writer.uint32(64).uint64(message.mutualStake);
     }
     if (message.payPerHour !== 0) {
-      writer.uint32(56).uint64(message.payPerHour);
+      writer.uint32(72).uint64(message.payPerHour);
     }
     if (message.distanceTip !== 0) {
-      writer.uint32(64).uint64(message.distanceTip);
+      writer.uint32(80).uint64(message.distanceTip);
     }
     return writer;
   },
@@ -78,12 +88,18 @@ export const StoredRide = {
           message.acceptanceTime = reader.string();
           break;
         case 6:
-          message.mutualStake = longToNumber(reader.uint64() as Long);
+          message.finishTime = reader.string();
           break;
         case 7:
-          message.payPerHour = longToNumber(reader.uint64() as Long);
+          message.finishLocation = reader.string();
           break;
         case 8:
+          message.mutualStake = longToNumber(reader.uint64() as Long);
+          break;
+        case 9:
+          message.payPerHour = longToNumber(reader.uint64() as Long);
+          break;
+        case 10:
           message.distanceTip = longToNumber(reader.uint64() as Long);
           break;
         default:
@@ -121,6 +137,16 @@ export const StoredRide = {
     } else {
       message.acceptanceTime = "";
     }
+    if (object.finishTime !== undefined && object.finishTime !== null) {
+      message.finishTime = String(object.finishTime);
+    } else {
+      message.finishTime = "";
+    }
+    if (object.finishLocation !== undefined && object.finishLocation !== null) {
+      message.finishLocation = String(object.finishLocation);
+    } else {
+      message.finishLocation = "";
+    }
     if (object.mutualStake !== undefined && object.mutualStake !== null) {
       message.mutualStake = Number(object.mutualStake);
     } else {
@@ -148,6 +174,9 @@ export const StoredRide = {
     message.passenger !== undefined && (obj.passenger = message.passenger);
     message.acceptanceTime !== undefined &&
       (obj.acceptanceTime = message.acceptanceTime);
+    message.finishTime !== undefined && (obj.finishTime = message.finishTime);
+    message.finishLocation !== undefined &&
+      (obj.finishLocation = message.finishLocation);
     message.mutualStake !== undefined &&
       (obj.mutualStake = message.mutualStake);
     message.payPerHour !== undefined && (obj.payPerHour = message.payPerHour);
@@ -182,6 +211,16 @@ export const StoredRide = {
       message.acceptanceTime = object.acceptanceTime;
     } else {
       message.acceptanceTime = "";
+    }
+    if (object.finishTime !== undefined && object.finishTime !== null) {
+      message.finishTime = object.finishTime;
+    } else {
+      message.finishTime = "";
+    }
+    if (object.finishLocation !== undefined && object.finishLocation !== null) {
+      message.finishLocation = object.finishLocation;
+    } else {
+      message.finishLocation = "";
     }
     if (object.mutualStake !== undefined && object.mutualStake !== null) {
       message.mutualStake = object.mutualStake;

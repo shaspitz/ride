@@ -29598,6 +29598,10 @@ paths:
                       type: string
                     acceptanceTime:
                       type: string
+                    finishTime:
+                      type: string
+                    finishLocation:
+                      type: string
                     mutualStake:
                       type: string
                       format: uint64
@@ -29733,6 +29737,10 @@ paths:
                   passenger:
                     type: string
                   acceptanceTime:
+                    type: string
+                  finishTime:
+                    type: string
+                  finishLocation:
                     type: string
                   mutualStake:
                     type: string
@@ -50926,6 +50934,9 @@ definitions:
         type: boolean
   smarshallspitzbart.ride.ride.MsgFinishResponse:
     type: object
+    properties:
+      success:
+        type: boolean
   smarshallspitzbart.ride.ride.MsgRequestRideResponse:
     type: object
     properties:
@@ -50957,6 +50968,10 @@ definitions:
             passenger:
               type: string
             acceptanceTime:
+              type: string
+            finishTime:
+              type: string
+            finishLocation:
               type: string
             mutualStake:
               type: string
@@ -51017,6 +51032,10 @@ definitions:
             type: string
           acceptanceTime:
             type: string
+          finishTime:
+            type: string
+          finishLocation:
+            type: string
           mutualStake:
             type: string
             format: uint64
@@ -51045,6 +51064,10 @@ definitions:
       passenger:
         type: string
       acceptanceTime:
+        type: string
+      finishTime:
+        type: string
+      finishLocation:
         type: string
       mutualStake:
         type: string

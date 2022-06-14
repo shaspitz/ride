@@ -17,6 +17,9 @@ rided query ride show-stored-ride 1
 ```
 rided tx ride accept 1 --from bob --gas auto
 ```
+```
+rided tx ride finish 1 "some loc" --from bob --gas auto
+```
 
 ## Get started
 

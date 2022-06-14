@@ -29,10 +29,12 @@ export interface MsgAcceptResponse {
 export interface MsgFinish {
   creator: string;
   idValue: string;
-  endLocation: string;
+  location: string;
 }
 
-export interface MsgFinishResponse {}
+export interface MsgFinishResponse {
+  success: boolean;
+}
 
 const baseMsgRequestRide: object = {
   creator: "",
@@ -372,7 +374,7 @@ export const MsgAcceptResponse = {
   },
 };
 
-const baseMsgFinish: object = { creator: "", idValue: "", endLocation: "" };
+const baseMsgFinish: object = { creator: "", idValue: "", location: "" };
 
 export const MsgFinish = {
   encode(message: MsgFinish, writer: Writer = Writer.create()): Writer {
@@ -382,8 +384,8 @@ export const MsgFinish = {
     if (message.idValue !== "") {
       writer.uint32(18).string(message.idValue);
     }
-    if (message.endLocation !== "") {
-      writer.uint32(26).string(message.endLocation);
+    if (message.location !== "") {
+      writer.uint32(26).string(message.location);
     }
     return writer;
   },
@@ -402,7 +404,7 @@ export const MsgFinish = {
           message.idValue = reader.string();
           break;
         case 3:
-          message.endLocation = reader.string();
+          message.location = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
@@ -424,10 +426,10 @@ export const MsgFinish = {
     } else {
       message.idValue = "";
     }
-    if (object.endLocation !== undefined && object.endLocation !== null) {
-      message.endLocation = String(object.endLocation);
+    if (object.location !== undefined && object.location !== null) {
+      message.location = String(object.location);
     } else {
-      message.endLocation = "";
+      message.location = "";
     }
     return message;
   },
@@ -436,8 +438,7 @@ export const MsgFinish = {
     const obj: any = {};
     message.creator !== undefined && (obj.creator = message.creator);
     message.idValue !== undefined && (obj.idValue = message.idValue);
-    message.endLocation !== undefined &&
-      (obj.endLocation = message.endLocation);
+    message.location !== undefined && (obj.location = message.location);
     return obj;
   },
 
@@ -453,19 +454,22 @@ export const MsgFinish = {
     } else {
       message.idValue = "";
     }
-    if (object.endLocation !== undefined && object.endLocation !== null) {
-      message.endLocation = object.endLocation;
+    if (object.location !== undefined && object.location !== null) {
+      message.location = object.location;
     } else {
-      message.endLocation = "";
+      message.location = "";
     }
     return message;
   },
 };
 
-const baseMsgFinishResponse: object = {};
+const baseMsgFinishResponse: object = { success: false };
 
 export const MsgFinishResponse = {
-  encode(_: MsgFinishResponse, writer: Writer = Writer.create()): Writer {
+  encode(message: MsgFinishResponse, writer: Writer = Writer.create()): Writer {
+    if (message.success === true) {
+      writer.uint32(8).bool(message.success);
+    }
     return writer;
   },
 
@@ -476,6 +480,9 @@ export const MsgFinishResponse = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
+        case 1:
+          message.success = reader.bool();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -484,18 +491,29 @@ export const MsgFinishResponse = {
     return message;
   },
 
-  fromJSON(_: any): MsgFinishResponse {
+  fromJSON(object: any): MsgFinishResponse {
     const message = { ...baseMsgFinishResponse } as MsgFinishResponse;
+    if (object.success !== undefined && object.success !== null) {
+      message.success = Boolean(object.success);
+    } else {
+      message.success = false;
+    }
     return message;
   },
 
-  toJSON(_: MsgFinishResponse): unknown {
+  toJSON(message: MsgFinishResponse): unknown {
     const obj: any = {};
+    message.success !== undefined && (obj.success = message.success);
     return obj;
   },
 
-  fromPartial(_: DeepPartial<MsgFinishResponse>): MsgFinishResponse {
+  fromPartial(object: DeepPartial<MsgFinishResponse>): MsgFinishResponse {
     const message = { ...baseMsgFinishResponse } as MsgFinishResponse;
+    if (object.success !== undefined && object.success !== null) {
+      message.success = object.success;
+    } else {
+      message.success = false;
+    }
     return message;
   },
 };

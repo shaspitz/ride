@@ -108,6 +108,7 @@ func TestFinishRideStorage(t *testing.T) {
 	require.Nil(t, err)
 
 	// TODO: Properly mock block time passing by.
+	// For now, timing functionality has been validated through CLI.
 	// require.Positive(t, finishTime.Sub(acceptanceTime))
 
 	require.True(t, ride1.HasAssignedDriver())

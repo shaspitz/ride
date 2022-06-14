@@ -17,7 +17,9 @@ export interface RideMsgAcceptResponse {
   success?: boolean;
 }
 
-export type RideMsgFinishResponse = object;
+export interface RideMsgFinishResponse {
+  success?: boolean;
+}
 
 export interface RideMsgRequestRideResponse {
   idValue?: string;
@@ -70,6 +72,8 @@ export interface RideStoredRide {
   driver?: string;
   passenger?: string;
   acceptanceTime?: string;
+  finishTime?: string;
+  finishLocation?: string;
 
   /** @format uint64 */
   mutualStake?: string;
