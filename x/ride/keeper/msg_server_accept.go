@@ -17,6 +17,11 @@ func (k msgServer) Accept(goCtx context.Context, msg *types.MsgAccept) (*types.M
 			errors.Wrapf(types.ErrRideNotFound, "ride not found %s", msg.IdValue)
 	}
 
+	nextRide, found := k.Keeper.GetNextRide(ctx)
+	if !found {
+		panic("NextRide not found")
+	}
+
 	err := ValidateAcceptRide(msg, storedRide)
 	if err != nil {
 		return &types.MsgAcceptResponse{Success: false}, err
@@ -33,6 +38,7 @@ func (k msgServer) Accept(goCtx context.Context, msg *types.MsgAccept) (*types.M
 	}
 
 	// Store acceptance time in default format.
+	// TODO: Do we still need this below??
 	storedRide.AcceptanceTime = types.TimeToString(ctx.BlockTime())
 
 	// TODO: Assign mutual stake from driver and passenger to the bank keeper,
@@ -40,10 +46,10 @@ func (k msgServer) Accept(goCtx context.Context, msg *types.MsgAccept) (*types.M
 	// Ie. if an error is returned, does the state just get thrown out by
 	// any validator who executes the msg?
 
-	// TODO: Set expiration time for the actual ride?? and store in state??
-
-	// Store ride via keeper.
+	// Ride is mutated this block, send it to the FIFO tail then update store accordingly.
+	k.Keeper.SendToFifoTail(ctx, &storedRide, &nextRide)
 	k.Keeper.SetStoredRide(ctx, storedRide)
+	k.Keeper.SetNextRide(ctx, nextRide)
 
 	// Emit appropriate event for ride acceptance.
 	ctx.EventManager().EmitEvent(

@@ -35,6 +35,9 @@ func (k msgServer) RequestRide(goCtx context.Context, msg *types.MsgRequestRide)
 		MutualStake: msg.MutualStake,
 		PayPerHour:  msg.HourlyPay,
 		DistanceTip: msg.DistanceTip,
+		// To be updated below.
+		BeforeId: types.NoFifoIdKey,
+		AfterId:  types.NoFifoIdKey,
 	}
 
 	// Validate assigned passenger address.
@@ -42,6 +45,10 @@ func (k msgServer) RequestRide(goCtx context.Context, msg *types.MsgRequestRide)
 	if err != nil {
 		return nil, err
 	}
+
+	// Ride is stored this block, send it to the FIFO tail.
+	k.Keeper.SendToFifoTail(ctx, &storedRide, &nextRide)
+	k.Keeper.SetStoredRide(ctx, storedRide)
 
 	// Store ride via keeper.
 	k.Keeper.SetStoredRide(ctx, storedRide)

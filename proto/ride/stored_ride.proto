@@ -14,6 +14,9 @@ message StoredRide {
   uint64 mutualStake = 8; 
   uint64 payPerHour = 9; 
   uint64 distanceTip = 10; 
+
+  string beforeId = 11;
+  string afterId = 12;
   
 }
 

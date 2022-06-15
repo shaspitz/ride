@@ -55,7 +55,9 @@ func TestRideRequestStorage(t *testing.T) {
 	nextRide, found := keeper.GetNextRide(sdk.UnwrapSDKContext(context))
 	require.True(t, found)
 	require.EqualValues(t, types.NextRide{
-		IdValue: 2,
+		IdValue:  2,
+		FifoHead: "1",
+		FifoTail: "1",
 	}, nextRide)
 	// Ensure stored ride can be accessed from key.
 	ride1, found1 := keeper.GetStoredRide(sdk.UnwrapSDKContext(context), "1")
@@ -68,6 +70,8 @@ func TestRideRequestStorage(t *testing.T) {
 		MutualStake: 30,
 		PayPerHour:  15,
 		DistanceTip: 5,
+		BeforeId:    "-1",
+		AfterId:     "-1",
 	}, ride1)
 	require.Empty(t, ride1.AcceptanceTime)
 	require.Empty(t, ride1.FinishLocation)

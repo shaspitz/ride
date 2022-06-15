@@ -67,6 +67,8 @@ func TestAcceptRideStorage(t *testing.T) {
 		DistanceTip: 10,
 		// Bypass check for acceptance time, test that it's populated below.
 		AcceptanceTime: ride1.AcceptanceTime,
+		BeforeId:       "-1",
+		AfterId:        "-1",
 	}, ride1)
 	require.NotEmpty(t, ride1.AcceptanceTime)
 	require.Empty(t, ride1.FinishTime)

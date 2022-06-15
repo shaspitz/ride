@@ -17,6 +17,11 @@ func (k msgServer) Finish(goCtx context.Context, msg *types.MsgFinish) (*types.M
 			errors.Wrapf(types.ErrRideNotFound, "ride not found with Id: %s", msg.IdValue)
 	}
 
+	nextRide, found := k.Keeper.GetNextRide(ctx)
+	if !found {
+		panic("NextRide not found")
+	}
+
 	err := ValidateFinishRide(msg, storedRide)
 	if err != nil {
 		return nil, err
@@ -33,8 +38,10 @@ func (k msgServer) Finish(goCtx context.Context, msg *types.MsgFinish) (*types.M
 	storedRide.FinishTime = types.TimeToString(ctx.BlockTime())
 	storedRide.FinishLocation = msg.Location
 
-	// Store ride via keeper.
+	// Ride is mutated this block, send it to the FIFO tail then update store accordingly.
+	k.Keeper.SendToFifoTail(ctx, &storedRide, &nextRide)
 	k.Keeper.SetStoredRide(ctx, storedRide)
+	k.Keeper.SetNextRide(ctx, nextRide)
 
 	// Emit appropriate event for ride acceptance.
 	ctx.EventManager().EmitEvent(

@@ -15,6 +15,8 @@ export interface StoredRide {
   mutualStake: number;
   payPerHour: number;
   distanceTip: number;
+  beforeId: string;
+  afterId: string;
 }
 
 const baseStoredRide: object = {
@@ -28,6 +30,8 @@ const baseStoredRide: object = {
   mutualStake: 0,
   payPerHour: 0,
   distanceTip: 0,
+  beforeId: "",
+  afterId: "",
 };
 
 export const StoredRide = {
@@ -61,6 +65,12 @@ export const StoredRide = {
     }
     if (message.distanceTip !== 0) {
       writer.uint32(80).uint64(message.distanceTip);
+    }
+    if (message.beforeId !== "") {
+      writer.uint32(90).string(message.beforeId);
+    }
+    if (message.afterId !== "") {
+      writer.uint32(98).string(message.afterId);
     }
     return writer;
   },
@@ -101,6 +111,12 @@ export const StoredRide = {
           break;
         case 10:
           message.distanceTip = longToNumber(reader.uint64() as Long);
+          break;
+        case 11:
+          message.beforeId = reader.string();
+          break;
+        case 12:
+          message.afterId = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
@@ -162,6 +178,16 @@ export const StoredRide = {
     } else {
       message.distanceTip = 0;
     }
+    if (object.beforeId !== undefined && object.beforeId !== null) {
+      message.beforeId = String(object.beforeId);
+    } else {
+      message.beforeId = "";
+    }
+    if (object.afterId !== undefined && object.afterId !== null) {
+      message.afterId = String(object.afterId);
+    } else {
+      message.afterId = "";
+    }
     return message;
   },
 
@@ -182,6 +208,8 @@ export const StoredRide = {
     message.payPerHour !== undefined && (obj.payPerHour = message.payPerHour);
     message.distanceTip !== undefined &&
       (obj.distanceTip = message.distanceTip);
+    message.beforeId !== undefined && (obj.beforeId = message.beforeId);
+    message.afterId !== undefined && (obj.afterId = message.afterId);
     return obj;
   },
 
@@ -236,6 +264,16 @@ export const StoredRide = {
       message.distanceTip = object.distanceTip;
     } else {
       message.distanceTip = 0;
+    }
+    if (object.beforeId !== undefined && object.beforeId !== null) {
+      message.beforeId = object.beforeId;
+    } else {
+      message.beforeId = "";
+    }
+    if (object.afterId !== undefined && object.afterId !== null) {
+      message.afterId = object.afterId;
+    } else {
+      message.afterId = "";
     }
     return message;
   },

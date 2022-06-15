@@ -68,7 +68,7 @@ func TestDefaultGenesisIsCorrect(t *testing.T) {
 	require.EqualValues(t,
 		&types.GenesisState{
 			StoredRideList: []types.StoredRide{},
-			NextRide:       &types.NextRide{uint64(1)},
+			NextRide:       &types.NextRide{uint64(1), "-1", "-1"},
 		},
 		types.DefaultGenesis())
 }

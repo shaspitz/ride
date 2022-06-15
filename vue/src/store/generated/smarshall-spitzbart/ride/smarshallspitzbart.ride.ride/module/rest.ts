@@ -28,6 +28,10 @@ export interface RideMsgRequestRideResponse {
 export interface RideNextRide {
   /** @format uint64 */
   idValue?: string;
+
+  /** For simplicity, all this activity is consolidated into a single FIFO structure with a global deadline. */
+  fifoHead?: string;
+  fifoTail?: string;
 }
 
 /**
@@ -83,6 +87,8 @@ export interface RideStoredRide {
 
   /** @format uint64 */
   distanceTip?: string;
+  beforeId?: string;
+  afterId?: string;
 }
 
 export interface RpcStatus {

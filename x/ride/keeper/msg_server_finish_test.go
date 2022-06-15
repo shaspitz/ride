@@ -98,6 +98,8 @@ func TestFinishRideStorage(t *testing.T) {
 		AcceptanceTime: ride1.AcceptanceTime,
 		FinishTime:     ride1.FinishTime,
 		FinishLocation: "finish loc",
+		BeforeId:       "-1",
+		AfterId:        "-1",
 	}, ride1)
 	require.NotEmpty(t, ride1.AcceptanceTime)
 	require.NotEmpty(t, ride1.FinishTime)

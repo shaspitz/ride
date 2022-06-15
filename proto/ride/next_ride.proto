@@ -4,6 +4,15 @@ package smarshallspitzbart.ride.ride;
 option go_package = "github.com/smarshall-spitzbart/ride/x/ride/types";
 
 message NextRide {
-  uint64 idValue = 1; 
+  uint64 idValue = 1; // Incrementing counter for assigning unique ids to new rides.
+
+  // Scaffolding to maintin an ongoing (FIFO) doubly linked list for deadlines pertaining to
+  // 1. Expiration of rides that were never accepted.
+  // 2. Expiration of rides that're ongoing.
+  // 3. Expiration of rides that were cancelled/finished.
+
+  // For simplicity, all this activity is consolidated into a single FIFO structure with a global deadline. 
+  string fifoHead = 2;
+  string fifoTail = 3;
   
 }

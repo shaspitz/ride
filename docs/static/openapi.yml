@@ -29517,6 +29517,13 @@ paths:
                   idValue:
                     type: string
                     format: uint64
+                  fifoHead:
+                    type: string
+                    description: >-
+                      For simplicity, all this activity is consolidated into a
+                      single FIFO structure with a global deadline.
+                  fifoTail:
+                    type: string
         default:
           description: An unexpected error response.
           schema:
@@ -29611,6 +29618,10 @@ paths:
                     distanceTip:
                       type: string
                       format: uint64
+                    beforeId:
+                      type: string
+                    afterId:
+                      type: string
               pagination:
                 type: object
                 properties:
@@ -29751,6 +29762,10 @@ paths:
                   distanceTip:
                     type: string
                     format: uint64
+                  beforeId:
+                    type: string
+                  afterId:
+                    type: string
         default:
           description: An unexpected error response.
           schema:
@@ -50948,6 +50963,13 @@ definitions:
       idValue:
         type: string
         format: uint64
+      fifoHead:
+        type: string
+        description: >-
+          For simplicity, all this activity is consolidated into a single FIFO
+          structure with a global deadline.
+      fifoTail:
+        type: string
   smarshallspitzbart.ride.ride.Params:
     type: object
     description: Params defines the parameters for the module.
@@ -50982,6 +51004,10 @@ definitions:
             distanceTip:
               type: string
               format: uint64
+            beforeId:
+              type: string
+            afterId:
+              type: string
       pagination:
         type: object
         properties:
@@ -51016,6 +51042,13 @@ definitions:
           idValue:
             type: string
             format: uint64
+          fifoHead:
+            type: string
+            description: >-
+              For simplicity, all this activity is consolidated into a single
+              FIFO structure with a global deadline.
+          fifoTail:
+            type: string
   smarshallspitzbart.ride.ride.QueryGetStoredRideResponse:
     type: object
     properties:
@@ -51045,6 +51078,10 @@ definitions:
           distanceTip:
             type: string
             format: uint64
+          beforeId:
+            type: string
+          afterId:
+            type: string
   smarshallspitzbart.ride.ride.QueryParamsResponse:
     type: object
     properties:
@@ -51078,6 +51115,10 @@ definitions:
       distanceTip:
         type: string
         format: uint64
+      beforeId:
+        type: string
+      afterId:
+        type: string
   tendermint.spn.monitoringp.ConnectionChannelID:
     type: object
     properties:
