@@ -31,19 +31,19 @@ func (storedRide StoredRide) GetPassengerAddress() (passenger sdk.AccAddress, er
 	return passenger, errors.Wrapf(err, ErrInvalidPassenger.Error(), storedRide.Passenger)
 }
 
-func (storedGame *StoredRide) GetAcceptanceTimeFormatted() (accepted time.Time, err error) {
-	accepted, err = time.Parse(types.TimeFormat, storedGame.AcceptanceTime)
-	return accepted, sdkerrors.Wrapf(err, ErrCantParseTime.Error(), storedGame.AcceptanceTime)
+func (storedRide *StoredRide) GetAcceptanceTimeFormatted() (accepted time.Time, err error) {
+	accepted, err = time.Parse(types.TimeFormat, storedRide.AcceptanceTime)
+	return accepted, sdkerrors.Wrapf(err, ErrCantParseTime.Error(), storedRide.AcceptanceTime)
 }
 
-func (storedGame *StoredRide) GetFinishTimeFormatted() (finished time.Time, err error) {
-	finished, err = time.Parse(types.TimeFormat, storedGame.FinishTime)
-	return finished, sdkerrors.Wrapf(err, ErrCantParseTime.Error(), storedGame.FinishTime)
+func (storedRide *StoredRide) GetFinishTimeFormatted() (finished time.Time, err error) {
+	finished, err = time.Parse(types.TimeFormat, storedRide.FinishTime)
+	return finished, sdkerrors.Wrapf(err, ErrCantParseTime.Error(), storedRide.FinishTime)
 }
 
-func (storedGame *StoredRide) GetDeadlineFormatted() (deadline time.Time, err error) {
-	deadline, err = time.Parse(types.TimeFormat, storedGame.Deadline)
-	return deadline, sdkerrors.Wrapf(err, ErrCantParseTime.Error(), storedGame.FinishTime)
+func (storedRide *StoredRide) GetDeadlineFormatted() (deadline time.Time, err error) {
+	deadline, err = time.Parse(types.TimeFormat, storedRide.Deadline)
+	return deadline, sdkerrors.Wrapf(err, ErrCantParseTime.Error(), storedRide.FinishTime)
 }
 
 func TimeToString(time time.Time) string {
