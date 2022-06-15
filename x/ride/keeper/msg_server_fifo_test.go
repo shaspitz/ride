@@ -84,6 +84,7 @@ func TestCreate3RidesHaveSavedFifo(t *testing.T) {
 				DistanceTip: 10,
 				BeforeId:    tt.beforeId,
 				AfterId:     tt.afterId,
+				Deadline:    types.TimeToString(sdk.UnwrapSDKContext(context).BlockTime().Add(types.DeadlinePeriod)),
 			}, ride)
 		})
 	}

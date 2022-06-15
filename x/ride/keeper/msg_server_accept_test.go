@@ -3,6 +3,7 @@ package keeper_test
 import (
 	"context"
 	"testing"
+	"time"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	keepertest "github.com/smarshall-spitzbart/ride/testutil/keeper"
@@ -58,19 +59,27 @@ func TestAcceptRideStorage(t *testing.T) {
 	require.True(t, found1)
 	// Ensure no other fields were mutated, and that driver is now assigned.
 	require.EqualValues(t, types.StoredRide{
-		Index:       "1",
-		Destination: "some other loc",
-		Driver:      bob,
-		Passenger:   alice,
-		MutualStake: 50,
-		PayPerHour:  15,
-		DistanceTip: 10,
-		// Bypass check for acceptance time, test that it's populated below.
-		AcceptanceTime: ride1.AcceptanceTime,
+		Index:          "1",
+		Destination:    "some other loc",
+		Driver:         bob,
+		Passenger:      alice,
+		MutualStake:    50,
+		PayPerHour:     15,
+		DistanceTip:    10,
+		AcceptanceTime: types.TimeToString(sdk.UnwrapSDKContext(context).BlockTime()),
 		BeforeId:       "-1",
 		AfterId:        "-1",
+		Deadline:       types.TimeToString(sdk.UnwrapSDKContext(context).BlockTime().Add(types.DeadlinePeriod)),
 	}, ride1)
 	require.NotEmpty(t, ride1.AcceptanceTime)
+	require.NotEmpty(t, ride1.Deadline)
+
+	deadline, err := ride1.GetDeadlineFormatted()
+	require.Nil(t, err)
+	acceptance, err := ride1.GetAcceptanceTimeFormatted()
+	require.Nil(t, err)
+	require.EqualValues(t, deadline.Sub(acceptance), 5*time.Minute)
+
 	require.Empty(t, ride1.FinishTime)
 	require.Empty(t, ride1.FinishLocation)
 	require.True(t, ride1.HasAssignedDriver())

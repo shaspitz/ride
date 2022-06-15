@@ -18,5 +18,6 @@ message StoredRide {
   string beforeId = 11;
   string afterId = 12;
   
+  string deadline = 13;
 }
 

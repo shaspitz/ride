@@ -10,9 +10,8 @@ import (
 // Helpers to implement ride deadlines more efficiently.
 // See: https://tutorials.cosmos.network/academy/3-my-own-chain/game-fifo.html
 
-// TODO: Make this hardcoded value configurable.
 func GetNextDeadline(ctx sdk.Context) time.Time {
-	return ctx.BlockTime().Add(5 * time.Minute)
+	return ctx.BlockTime().Add(types.DeadlinePeriod)
 }
 
 // UPDATE STORE AFTER USING THIS METHOD.
@@ -53,6 +52,10 @@ func (k Keeper) RemoveFromFifo(ctx sdk.Context, game *types.StoredRide, info *ty
 
 // UPDATE STORE AFTER USING THIS METHOD.
 func (k Keeper) SendToFifoTail(ctx sdk.Context, game *types.StoredRide, info *types.NextRide) {
+
+	// Update deadline before moving within linked list.
+	game.Deadline = types.TimeToString(GetNextDeadline(ctx))
+
 	if info.FifoHead == types.NoFifoIdKey && info.FifoTail == types.NoFifoIdKey {
 		game.BeforeId = types.NoFifoIdKey
 		game.AfterId = types.NoFifoIdKey

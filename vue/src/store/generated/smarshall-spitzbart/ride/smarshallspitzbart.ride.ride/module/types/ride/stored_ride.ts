@@ -17,6 +17,7 @@ export interface StoredRide {
   distanceTip: number;
   beforeId: string;
   afterId: string;
+  deadline: string;
 }
 
 const baseStoredRide: object = {
@@ -32,6 +33,7 @@ const baseStoredRide: object = {
   distanceTip: 0,
   beforeId: "",
   afterId: "",
+  deadline: "",
 };
 
 export const StoredRide = {
@@ -71,6 +73,9 @@ export const StoredRide = {
     }
     if (message.afterId !== "") {
       writer.uint32(98).string(message.afterId);
+    }
+    if (message.deadline !== "") {
+      writer.uint32(106).string(message.deadline);
     }
     return writer;
   },
@@ -117,6 +122,9 @@ export const StoredRide = {
           break;
         case 12:
           message.afterId = reader.string();
+          break;
+        case 13:
+          message.deadline = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
@@ -188,6 +196,11 @@ export const StoredRide = {
     } else {
       message.afterId = "";
     }
+    if (object.deadline !== undefined && object.deadline !== null) {
+      message.deadline = String(object.deadline);
+    } else {
+      message.deadline = "";
+    }
     return message;
   },
 
@@ -210,6 +223,7 @@ export const StoredRide = {
       (obj.distanceTip = message.distanceTip);
     message.beforeId !== undefined && (obj.beforeId = message.beforeId);
     message.afterId !== undefined && (obj.afterId = message.afterId);
+    message.deadline !== undefined && (obj.deadline = message.deadline);
     return obj;
   },
 
@@ -274,6 +288,11 @@ export const StoredRide = {
       message.afterId = object.afterId;
     } else {
       message.afterId = "";
+    }
+    if (object.deadline !== undefined && object.deadline !== null) {
+      message.deadline = object.deadline;
+    } else {
+      message.deadline = "";
     }
     return message;
   },

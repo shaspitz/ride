@@ -29622,6 +29622,8 @@ paths:
                       type: string
                     afterId:
                       type: string
+                    deadline:
+                      type: string
               pagination:
                 type: object
                 properties:
@@ -29765,6 +29767,8 @@ paths:
                   beforeId:
                     type: string
                   afterId:
+                    type: string
+                  deadline:
                     type: string
         default:
           description: An unexpected error response.
@@ -51008,6 +51012,8 @@ definitions:
               type: string
             afterId:
               type: string
+            deadline:
+              type: string
       pagination:
         type: object
         properties:
@@ -51082,6 +51088,8 @@ definitions:
             type: string
           afterId:
             type: string
+          deadline:
+            type: string
   smarshallspitzbart.ride.ride.QueryParamsResponse:
     type: object
     properties:
@@ -51118,6 +51126,8 @@ definitions:
       beforeId:
         type: string
       afterId:
+        type: string
+      deadline:
         type: string
   tendermint.spn.monitoringp.ConnectionChannelID:
     type: object

@@ -89,6 +89,7 @@ export interface RideStoredRide {
   distanceTip?: string;
   beforeId?: string;
   afterId?: string;
+  deadline?: string;
 }
 
 export interface RpcStatus {

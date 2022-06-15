@@ -38,7 +38,6 @@ func (k msgServer) Accept(goCtx context.Context, msg *types.MsgAccept) (*types.M
 	}
 
 	// Store acceptance time in default format.
-	// TODO: Do we still need this below??
 	storedRide.AcceptanceTime = types.TimeToString(ctx.BlockTime())
 
 	// TODO: Assign mutual stake from driver and passenger to the bank keeper,

@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"testing"
+	"time"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	keepertest "github.com/smarshall-spitzbart/ride/testutil/keeper"
@@ -88,30 +89,34 @@ func TestFinishRideStorage(t *testing.T) {
 	require.True(t, found1)
 	// Ensure no other fields were mutated, and that ride is now finished.
 	require.EqualValues(t, types.StoredRide{
-		Index:          "1",
-		Destination:    "some other loc",
-		Driver:         bob,
-		Passenger:      alice,
-		MutualStake:    50,
-		PayPerHour:     15,
-		DistanceTip:    10,
-		AcceptanceTime: ride1.AcceptanceTime,
-		FinishTime:     ride1.FinishTime,
+		Index:       "1",
+		Destination: "some other loc",
+		Driver:      bob,
+		Passenger:   alice,
+		MutualStake: 50,
+		PayPerHour:  15,
+		DistanceTip: 10,
+		// Block time returns a default value in unit tests, so these two timestamps will be equiv.
+		AcceptanceTime: types.TimeToString(sdk.UnwrapSDKContext(context).BlockTime()),
+		FinishTime:     types.TimeToString(sdk.UnwrapSDKContext(context).BlockTime()),
 		FinishLocation: "finish loc",
 		BeforeId:       "-1",
 		AfterId:        "-1",
+		Deadline:       types.TimeToString(sdk.UnwrapSDKContext(context).BlockTime().Add(types.DeadlinePeriod)),
 	}, ride1)
 	require.NotEmpty(t, ride1.AcceptanceTime)
 	require.NotEmpty(t, ride1.FinishTime)
+	require.NotEmpty(t, ride1.Deadline)
 
-	_, err = ride1.GetFinishTimeFormatted()
+	deadline, err := ride1.GetDeadlineFormatted()
 	require.Nil(t, err)
-	_, err = ride1.GetAcceptanceTimeFormatted()
+	acceptance, err := ride1.GetAcceptanceTimeFormatted()
 	require.Nil(t, err)
+	require.EqualValues(t, deadline.Sub(acceptance), 5*time.Minute)
 
-	// TODO: Properly mock block time passing by.
-	// For now, timing functionality has been validated through CLI.
-	// require.Positive(t, finishTime.Sub(acceptanceTime))
+	finished, err := ride1.GetFinishTimeFormatted()
+	require.Nil(t, err)
+	require.EqualValues(t, deadline.Sub(finished), 5*time.Minute)
 
 	require.True(t, ride1.HasAssignedDriver())
 	require.True(t, ride1.IsFinished())

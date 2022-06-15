@@ -72,6 +72,7 @@ func TestRideRequestStorage(t *testing.T) {
 		DistanceTip: 5,
 		BeforeId:    "-1",
 		AfterId:     "-1",
+		Deadline:    types.TimeToString(sdk.UnwrapSDKContext(context).BlockTime().Add(types.DeadlinePeriod)),
 	}, ride1)
 	require.Empty(t, ride1.AcceptanceTime)
 	require.Empty(t, ride1.FinishLocation)
