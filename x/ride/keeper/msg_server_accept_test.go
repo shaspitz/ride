@@ -30,6 +30,40 @@ func setupMsgServerAcceptRide(t testing.TB) (types.MsgServer, keeper.Keeper, con
 	return server, *k, context
 }
 
+func TestAcceptValidation(t *testing.T) {
+	msgServer, _, context := setupMsgServerAcceptRide(t)
+
+	// Ensure that passenger cannot be driver.
+	acceptRideResponse, err := msgServer.Accept(context, &types.MsgAccept{
+		Creator: alice,
+		IdValue: "1",
+	})
+	require.EqualValues(t, types.MsgAcceptResponse{
+		Success: false,
+	}, *acceptRideResponse)
+	require.NotNil(t, err)
+
+	acceptRideResponse, err = msgServer.Accept(context, &types.MsgAccept{
+		Creator: bob,
+		IdValue: "1",
+	})
+	// Require success in msg server handling.
+	require.Nil(t, err)
+	require.EqualValues(t, types.MsgAcceptResponse{
+		Success: true,
+	}, *acceptRideResponse)
+
+	// Ensure that another driver cannot accept ride after it has been accepted by bob.
+	acceptRideResponse, err = msgServer.Accept(context, &types.MsgAccept{
+		Creator: carol,
+		IdValue: "1",
+	})
+	require.EqualValues(t, types.MsgAcceptResponse{
+		Success: false,
+	}, *acceptRideResponse)
+	require.NotNil(t, err)
+}
+
 func TestAcceptRide(t *testing.T) {
 	msgServer, _, context := setupMsgServerAcceptRide(t)
 	acceptRideResponse, err := msgServer.Accept(context, &types.MsgAccept{
@@ -94,8 +128,6 @@ func TestAcceptRideStorage(t *testing.T) {
 		Success: false,
 	}, *acceptRideResponse)
 }
-
-// TODO: Make tests for the functionality that'll be included in "ValidateAcceptRide"
 
 func TestAcceptRideEventEmitted(t *testing.T) {
 	msgServer, _, context := setupMsgServerAcceptRide(t)

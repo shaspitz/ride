@@ -72,6 +72,54 @@ func TestFinishRide(t *testing.T) {
 	}
 }
 
+func TestFinishValidation(t *testing.T) {
+	msgServer, _, context := setupMsgServerFinishRide(t)
+
+	// Ensure that an irrelevant account cannot finish ride.
+	finishRideResponse, err := msgServer.Finish(context, &types.MsgFinish{
+		Creator:  carol,
+		IdValue:  "1",
+		Location: "finish loc from rando",
+	})
+	require.EqualValues(t, types.MsgFinishResponse{
+		Success: false,
+	}, *finishRideResponse)
+	require.NotNil(t, err)
+
+	finishRideResponse, err = msgServer.Finish(context, &types.MsgFinish{
+		Creator:  bob,
+		IdValue:  "1",
+		Location: "finish loc",
+	})
+	// Require success in msg server handling.
+	require.Nil(t, err)
+	require.EqualValues(t, types.MsgFinishResponse{
+		Success: true,
+	}, *finishRideResponse)
+
+	// Ensure that this same game cannot be finished again.
+	finishRideResponse, err = msgServer.Finish(context, &types.MsgFinish{
+		Creator:  bob,
+		IdValue:  "1",
+		Location: "finish loc that's different",
+	})
+	require.EqualValues(t, types.MsgFinishResponse{
+		Success: false,
+	}, *finishRideResponse)
+	require.NotNil(t, err)
+
+	// Even by another creator
+	finishRideResponse, err = msgServer.Finish(context, &types.MsgFinish{
+		Creator:  carol,
+		IdValue:  "1",
+		Location: "finish loc that's different",
+	})
+	require.EqualValues(t, types.MsgFinishResponse{
+		Success: false,
+	}, *finishRideResponse)
+	require.NotNil(t, err)
+}
+
 func TestFinishRideStorage(t *testing.T) {
 	msgServer, keeper, context := setupMsgServerFinishRide(t)
 	finishRideResponse, err := msgServer.Finish(context, &types.MsgFinish{
@@ -121,8 +169,6 @@ func TestFinishRideStorage(t *testing.T) {
 	require.True(t, ride1.HasAssignedDriver())
 	require.True(t, ride1.IsFinished())
 }
-
-// TODO: Make tests for the functionality that'll be included in "ValidateFinishRide"
 
 func TestFinishRideEventEmitted(t *testing.T) {
 	msgServer, _, context := setupMsgServerFinishRide(t)

@@ -67,11 +67,15 @@ func (k msgServer) Accept(goCtx context.Context, msg *types.MsgAccept) (*types.M
 // per https://docs.cosmos.network/main/building-modules/msg-services.html#validation
 //
 // NOTE: Oracle validation would exist here for starting location.
-
 func ValidateAcceptRide(msg *types.MsgAccept, storedRide types.StoredRide) error {
 
 	if storedRide.HasAssignedDriver() {
 		return errors.Wrapf(types.ErrAssignedDriver, "driver has already been assigned for ride with Id: %s", msg.IdValue)
+	}
+
+	if msg.Creator == storedRide.Passenger {
+		return errors.Wrapf(types.ErrCannotDriveYourself,
+			"%s is the passenger of this ride, and cannot be the driver", storedRide.Passenger)
 	}
 	// TODO: Enforce that driver actually possesses mutual stake set by passenger.
 	// TODO: Charge any gas here?

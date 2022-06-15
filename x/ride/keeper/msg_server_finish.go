@@ -24,7 +24,7 @@ func (k msgServer) Finish(goCtx context.Context, msg *types.MsgFinish) (*types.M
 
 	err := ValidateFinishRide(msg, storedRide)
 	if err != nil {
-		return nil, err
+		return &types.MsgFinishResponse{Success: false}, err
 	}
 
 	if !storedRide.HasAssignedDriver() {
@@ -57,8 +57,13 @@ func (k msgServer) Finish(goCtx context.Context, msg *types.MsgFinish) (*types.M
 // TODO: Unit test
 func ValidateFinishRide(msg *types.MsgFinish, storedRide types.StoredRide) error {
 	if msg.Creator != storedRide.Passenger && msg.Creator != storedRide.Driver {
-		return errors.Wrapf(types.ErrIrrelevantRide, "%s is not associated with game %s",
+		return errors.Wrapf(types.ErrIrrelevantRide, "%s is not associated with ride %s",
 			msg.Creator, msg.IdValue)
 	}
+
+	if storedRide.IsFinished() {
+		return errors.Wrapf(types.ErrAlreadyFinishedRide, "ride %s already finished", msg.IdValue)
+	}
+
 	return nil
 }
