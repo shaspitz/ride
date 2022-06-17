@@ -18,6 +18,11 @@ func (storedRide StoredRide) GetDriverAddress() (driver sdk.AccAddress, err erro
 	return driver, errors.Wrapf(err, ErrInvalidDriver.Error(), storedRide.Driver)
 }
 
+func (storedRide StoredRide) GetPassengerAddress() (passenger sdk.AccAddress, err error) {
+	passenger, err = sdk.AccAddressFromBech32(storedRide.Passenger)
+	return passenger, errors.Wrapf(err, ErrInvalidPassenger.Error(), storedRide.Passenger)
+}
+
 func (storedRide StoredRide) HasAssignedDriver() bool {
 	return storedRide.Driver != ""
 }
@@ -26,9 +31,12 @@ func (storedRide StoredRide) IsFinished() bool {
 	return storedRide.FinishTime != ""
 }
 
-func (storedRide StoredRide) GetPassengerAddress() (passenger sdk.AccAddress, err error) {
-	passenger, err = sdk.AccAddressFromBech32(storedRide.Passenger)
-	return passenger, errors.Wrapf(err, ErrInvalidPassenger.Error(), storedRide.Passenger)
+func (storedRide StoredRide) HasExpired(ctx sdk.Context) (bool, error) {
+	deadlineAsTime, err := storedRide.GetDeadlineFormatted()
+	if err != nil {
+		return false, err
+	}
+	return deadlineAsTime.Before(ctx.BlockTime()), nil
 }
 
 func (storedRide *StoredRide) GetAcceptanceTimeFormatted() (accepted time.Time, err error) {

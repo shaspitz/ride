@@ -53,3 +53,13 @@ const (
 const (
 	NoFifoIdKey = "-1"
 )
+
+// Event keys representing the expiration events of stored rides in three different cases.
+// 1. A requested but unaccepted ride has auto-expired, with no driver assigned yet.
+// 2. An active ride has auto-expired, with an assigned driver and stake already put up.
+// 3. A finished ride has auto-expired, where applicable payouts were made to the driver and/or passenger.
+const (
+	RideRequestExpiredEventKey  = "RideRequestExpired"
+	ActiveRideExpiredEventKey   = "ActiveRideExpired"
+	FinishedRideExpiredEventKey = "FinishedRideExpired"
+)

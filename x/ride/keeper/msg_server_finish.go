@@ -29,8 +29,10 @@ func (k msgServer) Finish(goCtx context.Context, msg *types.MsgFinish) (*types.M
 
 	if !storedRide.HasAssignedDriver() {
 		// TODO: No driver accepted yet in this case. Return funds and erase game.
-		_ = ctx
+		k.Keeper.RemoveFromFifo(ctx, &storedRide, &nextRide)
 		k.Keeper.RemoveStoredRide(ctx, msg.IdValue)
+		k.Keeper.SetNextRide(ctx, nextRide)
+		return &types.MsgFinishResponse{Success: true}, err
 	}
 
 	// TODO: Auto execution timer? Where payments are made after a timeout!!
@@ -54,7 +56,6 @@ func (k msgServer) Finish(goCtx context.Context, msg *types.MsgFinish) (*types.M
 	return &types.MsgFinishResponse{Success: true}, nil
 }
 
-// TODO: Unit test
 func ValidateFinishRide(msg *types.MsgFinish, storedRide types.StoredRide) error {
 	if msg.Creator != storedRide.Passenger && msg.Creator != storedRide.Driver {
 		return errors.Wrapf(types.ErrIrrelevantRide, "%s is not associated with ride %s",
