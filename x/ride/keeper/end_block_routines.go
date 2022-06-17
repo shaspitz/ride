@@ -2,14 +2,15 @@ package keeper
 
 import (
 	"context"
+	"strings"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/smarshall-spitzbart/ride/x/ride/types"
 )
 
 type ExpiredRide interface {
-	HandleExpiration(k Keeper) bool
-	InvokeEvent(k Keeper) bool
+	HandleExpiration(k Keeper, ctx sdk.Context, nextRide *types.NextRide)
+	InvokeEvent(ctx sdk.Context)
 }
 
 // Going back in time, it'd be better to implement these three structures as their own
@@ -38,9 +39,13 @@ func (k Keeper) CleanupExpiredRides(goCtx context.Context) {
 	oldestStoredRideId := nextRide.FifoHead
 
 	for {
+		// Check for being finished moving along FIFO.
+		if strings.Compare(oldestStoredRideId, types.NoFifoIdKey) == 0 {
+			break
+		}
 		oldestStoredRide, found := k.GetStoredRide(ctx, oldestStoredRideId)
 		if !found {
-			panic("Fifo head game not found " + oldestStoredRideId)
+			panic("Fifo head ride not found " + oldestStoredRideId)
 		}
 		expired, err := oldestStoredRide.HasExpired(ctx)
 		if err != nil {
@@ -66,8 +71,8 @@ func (k Keeper) CleanupExpiredRides(goCtx context.Context) {
 				}
 			}
 
-			expiredRide.HandleExpiration(k)
-			expiredRide.InvokeEvent(k)
+			expiredRide.HandleExpiration(k, ctx, &nextRide)
+			expiredRide.InvokeEvent(ctx)
 			oldestStoredRideId = nextRide.FifoHead
 		} else {
 			// Since games are stored in FIFO, there are no more to check for expiration.
@@ -77,8 +82,6 @@ func (k Keeper) CleanupExpiredRides(goCtx context.Context) {
 	// Ensure mutations to FIFO are persisted.
 	k.SetNextRide(ctx, nextRide)
 }
-
-// TODO: unit tests on all of these.
 
 func (expRide *ExpiredRideRequest) HandleExpiration(
 	k Keeper, ctx sdk.Context, nextRide *types.NextRide) {
@@ -103,7 +106,7 @@ func (expRide *ExpiredFinishedRide) HandleExpiration(
 	k.RemoveStoredRide(ctx, expRide.storedRide.Index)
 }
 
-func (expRide *ExpiredRideRequest) InvokeEvent(k Keeper, ctx sdk.Context) {
+func (expRide *ExpiredRideRequest) InvokeEvent(ctx sdk.Context) {
 	ctx.EventManager().EmitEvent(
 		sdk.NewEvent(sdk.EventTypeMessage,
 			sdk.NewAttribute(sdk.AttributeKeyModule, types.ModuleName),
@@ -112,7 +115,7 @@ func (expRide *ExpiredRideRequest) InvokeEvent(k Keeper, ctx sdk.Context) {
 	)
 }
 
-func (expRide *ExpiredActiveRide) InvokeEvent(k Keeper, ctx sdk.Context) {
+func (expRide *ExpiredActiveRide) InvokeEvent(ctx sdk.Context) {
 	ctx.EventManager().EmitEvent(
 		sdk.NewEvent(sdk.EventTypeMessage,
 			sdk.NewAttribute(sdk.AttributeKeyModule, types.ModuleName),
@@ -121,7 +124,7 @@ func (expRide *ExpiredActiveRide) InvokeEvent(k Keeper, ctx sdk.Context) {
 	)
 }
 
-func (expRide *ExpiredFinishedRide) InvokeEvent(k Keeper, ctx sdk.Context) {
+func (expRide *ExpiredFinishedRide) InvokeEvent(ctx sdk.Context) {
 	ctx.EventManager().EmitEvent(
 		sdk.NewEvent(sdk.EventTypeMessage,
 			sdk.NewAttribute(sdk.AttributeKeyModule, types.ModuleName),

@@ -48,7 +48,6 @@ func (k msgServer) RequestRide(goCtx context.Context, msg *types.MsgRequestRide)
 
 	// Ride is stored this block, send it to the FIFO tail.
 	k.Keeper.SendToFifoTail(ctx, &storedRide, &nextRide)
-	k.Keeper.SetStoredRide(ctx, storedRide)
 
 	// Store ride via keeper.
 	k.Keeper.SetStoredRide(ctx, storedRide)
