@@ -8,6 +8,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/store"
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	bankKeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
 	typesparams "github.com/cosmos/cosmos-sdk/x/params/types"
 	"github.com/smarshall-spitzbart/ride/x/ride/keeper"
 	"github.com/smarshall-spitzbart/ride/x/ride/types"
@@ -41,6 +42,7 @@ func RideKeeper(t testing.TB) (*keeper.Keeper, sdk.Context) {
 		storeKey,
 		memStoreKey,
 		paramsSubspace,
+		*new(bankKeeper.Keeper),
 	)
 
 	ctx := sdk.NewContext(stateStore, tmproto.Header{}, false, log.NewNopLogger())

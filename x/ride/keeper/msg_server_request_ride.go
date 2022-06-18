@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	errors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/smarshall-spitzbart/ride/x/ride/types"
 )
 
@@ -78,9 +79,12 @@ func (k msgServer) RequestRide(goCtx context.Context, msg *types.MsgRequestRide)
 // NOTE: Oracle validation would exist here for starting location.
 func ValidateRequestRide(msg *types.MsgRequestRide) error {
 
-	// TODO: Enforce mutual stake is above some config, etc.
-	// TODO: Enforce that passenger actually possesses mutual stake set by Tx.
+	if msg.MutualStake < msg.DistanceTip+msg.HourlyPay {
+		return errors.Wrapf(types.ErrRideParameters, "mutual stake is below distance tip + 1 hour pay")
+	}
+
+	// TODO: Enforce that passenger actually possesses mutual stake set by Tx <- Auth module?
+
 	// TODO: Charge any gas here?
-	// TODO: Set expiration time for the request?? and store in state??
 	return nil
 }

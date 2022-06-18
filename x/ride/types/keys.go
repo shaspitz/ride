@@ -17,6 +17,8 @@ const (
 
 	// MemStoreKey defines the in-memory store key
 	MemStoreKey = "mem_ride"
+
+	StoredRideMutualStake = "MutualStake"
 )
 
 func KeyPrefix(p string) []byte {

@@ -54,6 +54,10 @@ func (storedRide *StoredRide) GetDeadlineFormatted() (deadline time.Time, err er
 	return deadline, sdkerrors.Wrapf(err, ErrCantParseTime.Error(), storedRide.FinishTime)
 }
 
+func (storedRide StoredRide) GetMutualStakeInCoin() (stake sdk.Coin) {
+	return sdk.NewCoin(sdk.DefaultBondDenom, sdk.NewInt(int64(storedRide.MutualStake)))
+}
+
 func TimeToString(time time.Time) string {
 	return time.UTC().Format(types.TimeFormat)
 }

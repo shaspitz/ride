@@ -81,7 +81,50 @@ func TestRideRequestStorage(t *testing.T) {
 	require.False(t, ride1.IsFinished())
 }
 
-// TODO: Make tests for the functionality that'll be included in "ValidateRequestRide"
+func TestRideRequestValidation(t *testing.T) {
+	msgServer, _, context := setupMsgServerRequestRide(t)
+
+	// mutual stake must be > distance tip + 1 hour pay
+	_, err := msgServer.RequestRide(context, &types.MsgRequestRide{
+		Creator:       alice,
+		StartLocation: "a loc",
+		Destination:   "a dest",
+		HourlyPay:     5,
+		DistanceTip:   3,
+		MutualStake:   4,
+	})
+	require.NotNil(t, err)
+
+	_, err = msgServer.RequestRide(context, &types.MsgRequestRide{
+		Creator:       alice,
+		StartLocation: "a loc",
+		Destination:   "a dest",
+		HourlyPay:     5,
+		DistanceTip:   3,
+		MutualStake:   2,
+	})
+	require.NotNil(t, err)
+
+	_, err = msgServer.RequestRide(context, &types.MsgRequestRide{
+		Creator:       alice,
+		StartLocation: "a loc",
+		Destination:   "a dest",
+		HourlyPay:     5,
+		DistanceTip:   3,
+		MutualStake:   7,
+	})
+	require.NotNil(t, err)
+
+	_, err = msgServer.RequestRide(context, &types.MsgRequestRide{
+		Creator:       alice,
+		StartLocation: "a loc",
+		Destination:   "a dest",
+		HourlyPay:     5,
+		DistanceTip:   3,
+		MutualStake:   90,
+	})
+	require.Nil(t, err)
+}
 
 func TestRequestRideEventEmitted(t *testing.T) {
 	msgServer, _, context := setupMsgServerRequestRide(t)
