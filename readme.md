@@ -1,7 +1,7 @@
 # Ride Sharing Blockchain
 **ride** is a blockchain for ride sharing utilizing the Cosmos SDK and Tendermint, created with [Ignite CLI](https://ignite.com/cli).
 
-Focuses on the business logic for such an idea, with the assumption that a [proof-of-location](https://tokens-economy.gitbook.io/consensus/chain-based-proof-of-capacity-space/dynamic-proof-of-location) like system would be implemented elsewhere. 
+Focus -> business logic for such an idea, with the assumption that a [proof-of-location](https://tokens-economy.gitbook.io/consensus/chain-based-proof-of-capacity-space/dynamic-proof-of-location) like system would be implemented elsewhere. 
 
 ## Application CLI Commands (
 Below are some example CLI commands for the ride daemon. Important functionality is included in ```/scripts```. 
