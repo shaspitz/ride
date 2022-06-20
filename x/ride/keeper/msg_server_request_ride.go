@@ -41,8 +41,13 @@ func (k msgServer) RequestRide(goCtx context.Context, msg *types.MsgRequestRide)
 		AfterId:  types.NoFifoIdKey,
 	}
 
-	// Validate assigned passenger address.
+	// Validate assigned passenger address can be parsed.
 	_, err = storedRide.GetPassengerAddress()
+	if err != nil {
+		return nil, err
+	}
+
+	err = k.Keeper.CollectDriverStake(ctx, &storedRide)
 	if err != nil {
 		return nil, err
 	}

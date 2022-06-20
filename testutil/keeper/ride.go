@@ -8,7 +8,6 @@ import (
 	"github.com/cosmos/cosmos-sdk/store"
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	bankKeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
 	typesparams "github.com/cosmos/cosmos-sdk/x/params/types"
 	"github.com/smarshall-spitzbart/ride/x/ride/keeper"
 	"github.com/smarshall-spitzbart/ride/x/ride/types"
@@ -42,7 +41,7 @@ func RideKeeper(t testing.TB) (*keeper.Keeper, sdk.Context) {
 		storeKey,
 		memStoreKey,
 		paramsSubspace,
-		*new(bankKeeper.Keeper),
+		DummyBankKeeper{},
 	)
 
 	ctx := sdk.NewContext(stateStore, tmproto.Header{}, false, log.NewNopLogger())
@@ -51,4 +50,20 @@ func RideKeeper(t testing.TB) (*keeper.Keeper, sdk.Context) {
 	k.SetParams(ctx, types.DefaultParams())
 
 	return k, ctx
+}
+
+// Implements the bank keeper interface to enable simple unit tests.
+// Bank keeper functionality is assumed to be well tested itself.
+type DummyBankKeeper struct{}
+
+func (d DummyBankKeeper) SpendableCoins(ctx sdk.Context, addr sdk.AccAddress) sdk.Coins {
+	return *new(sdk.Coins)
+}
+
+func (d DummyBankKeeper) SendCoinsFromModuleToAccount(ctx sdk.Context, senderModule string, recipientAddr sdk.AccAddress, amt sdk.Coins) error {
+	return nil
+}
+
+func (d DummyBankKeeper) SendCoinsFromAccountToModule(ctx sdk.Context, senderAddr sdk.AccAddress, recipientModule string, amt sdk.Coins) error {
+	return nil
 }

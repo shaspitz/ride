@@ -60,7 +60,6 @@ func (k Keeper) CleanupExpiredRides(goCtx context.Context) {
 				if oldestStoredRide.HasAssignedDriver() {
 					expiredRide = &ExpiredFinishedRide{storedRide: &oldestStoredRide}
 				} else {
-					// TODO, implement this case in finish msg handler.
 					panic("finished ride without driver should have already been handled and cleaned up.")
 				}
 			} else {
@@ -85,14 +84,14 @@ func (k Keeper) CleanupExpiredRides(goCtx context.Context) {
 
 func (expRide *ExpiredRideRequest) HandleExpiration(
 	k Keeper, ctx sdk.Context, nextRide *types.NextRide) {
-	// TODO: Return staked funds to passenger.
+	k.MustRefundStakes(ctx, expRide.storedRide)
 	k.RemoveFromFifo(ctx, expRide.storedRide, nextRide)
 	k.RemoveStoredRide(ctx, expRide.storedRide.Index)
 }
 
 func (expRide *ExpiredActiveRide) HandleExpiration(
 	k Keeper, ctx sdk.Context, nextRide *types.NextRide) {
-	// Convert to finished ride, dispute will likely occur.
+	// Convert to finished ride, dispute should occur.
 	expRide.storedRide.FinishTime = types.TimeToString(ctx.BlockTime())
 	expRide.storedRide.FinishLocation = "unknown"
 	k.SendToFifoTail(ctx, expRide.storedRide, nextRide)
@@ -101,7 +100,7 @@ func (expRide *ExpiredActiveRide) HandleExpiration(
 
 func (expRide *ExpiredFinishedRide) HandleExpiration(
 	k Keeper, ctx sdk.Context, nextRide *types.NextRide) {
-	// TODO: Resolve payouts for nominally finished rides, then garbage collect.
+	k.MustPayout(ctx, expRide.storedRide)
 	k.RemoveFromFifo(ctx, expRide.storedRide, nextRide)
 	k.RemoveStoredRide(ctx, expRide.storedRide.Index)
 }

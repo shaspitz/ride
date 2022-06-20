@@ -18,8 +18,7 @@ var (
 	ErrIrrelevantRide      = sdkerrors.Register(ModuleName, 1107, "msg creator not passenger or driver for this ride")
 	ErrAlreadyFinishedRide = sdkerrors.Register(ModuleName, 1108, "ride already finished")
 	ErrCannotDriveYourself = sdkerrors.Register(ModuleName, 1109, "passenger cannot be driver")
-
-	ErrMutualStake     = sdkerrors.Register(ModuleName, 1110, "error processing mutual stake")
-	ErrCantRefundStake = sdkerrors.Register(ModuleName, 1111, "cannot refund stake")
-	ErrRideParameters  = sdkerrors.Register(ModuleName, 1112, "ride parameters are invalid")
+	ErrMutualStake         = sdkerrors.Register(ModuleName, 1110, "error processing mutual stake")
+	ErrCantRefundStake     = sdkerrors.Register(ModuleName, 1111, "cannot refund stake")
+	ErrRideParameters      = sdkerrors.Register(ModuleName, 1112, "ride parameters are invalid")
 )

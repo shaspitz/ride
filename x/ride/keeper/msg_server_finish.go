@@ -27,15 +27,14 @@ func (k msgServer) Finish(goCtx context.Context, msg *types.MsgFinish) (*types.M
 		return &types.MsgFinishResponse{Success: false}, err
 	}
 
+	// No driver accepted yet in this case. Return funds and erase game.
 	if !storedRide.HasAssignedDriver() {
-		// TODO: No driver accepted yet in this case. Return funds and erase game.
+		k.Keeper.MustRefundStakes(ctx, &storedRide)
 		k.Keeper.RemoveFromFifo(ctx, &storedRide, &nextRide)
 		k.Keeper.RemoveStoredRide(ctx, msg.IdValue)
 		k.Keeper.SetNextRide(ctx, nextRide)
 		return &types.MsgFinishResponse{Success: true}, err
 	}
-
-	// TODO: Auto execution timer? Where payments are made after a timeout!!
 
 	storedRide.FinishTime = types.TimeToString(ctx.BlockTime())
 	storedRide.FinishLocation = msg.Location

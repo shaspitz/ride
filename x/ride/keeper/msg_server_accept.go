@@ -40,10 +40,13 @@ func (k msgServer) Accept(goCtx context.Context, msg *types.MsgAccept) (*types.M
 	// Store acceptance time in default format.
 	storedRide.AcceptanceTime = types.TimeToString(ctx.BlockTime())
 
-	// TODO: Assign mutual stake from driver and passenger to the bank keeper,
-	// write tests to see if this whole method runs atomically..
+	// TODO: Test to see if this whole method runs atomically..
 	// Ie. if an error is returned, does the state just get thrown out by
 	// any validator who executes the msg?
+	err = k.Keeper.CollectDriverStake(ctx, &storedRide)
+	if err != nil {
+		return nil, err
+	}
 
 	// Ride is mutated this block, send it to the FIFO tail then update store accordingly.
 	k.Keeper.SendToFifoTail(ctx, &storedRide, &nextRide)

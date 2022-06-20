@@ -44,14 +44,11 @@ func (k *Keeper) CollectPassengerStake(ctx sdk.Context, storedRide *types.Stored
 	return nil
 }
 
-// at the end of a ride completing, one of these three methods will run
-// TODO: Use invariant module for these "Must" methods
+// TODO: Use invariant module for "Must" methods
 
+// NOTE: Assume rides will be under 1 hour + distance tip for now,
+// can protect against more edge cases if there's time.
 func (k *Keeper) MustPayout(ctx sdk.Context, storedRide *types.StoredRide) {
-	// NOTE: Assume rides will be under 1 hour + distance tip for now, can protect against edge
-	// cases if there's time.
-
-	// TODO: Ensure invariant that driver and passenger addresses are populated, also times
 
 	passengerAddress, err := storedRide.GetPassengerAddress()
 	if err != nil {
@@ -78,11 +75,14 @@ func (k *Keeper) MustPayout(ctx sdk.Context, storedRide *types.StoredRide) {
 	driverPayoutAmount := storedRide.MutualStake + storedRide.DistanceTip + storedRide.PayPerHour*uint64(driveDuration.Hours())
 	driverPayoutInCoin := sdk.NewCoin(sdk.DefaultBondDenom, sdk.NewInt(int64(driverPayoutAmount)))
 
+	if driverPayoutAmount > 2*storedRide.MutualStake {
+		sdkerrors.Wrapf(err, types.ErrMutualStake.Error(),
+			"invalid driver payout amount, more than is staked!")
+	}
+
 	// Passenger is paid back remaining funds from ride account.
 	passengerPayout := 2*storedRide.MutualStake - driverPayoutAmount
 	passengerPayoutInCoin := sdk.NewCoin(sdk.DefaultBondDenom, sdk.NewInt(int64(passengerPayout)))
-
-	// TODO: Enforce invariant that passenger payout is still positive.
 
 	err = k.bankKeeper.SendCoinsFromModuleToAccount(
 		ctx, types.ModuleName, driverAddress, sdk.NewCoins(driverPayoutInCoin))
@@ -101,10 +101,7 @@ func (k *Keeper) MustProcessDispute(ctx sdk.Context, storedRide *types.StoredRid
 	// TODO, implement disputes later on.
 }
 
-// TODO: Unit test.
 func (k *Keeper) MustRefundStakes(ctx sdk.Context, storedRide *types.StoredRide) {
-
-	// TODO: Ensure invariant that at least passenger address is populated.
 
 	passengerAddress, err := storedRide.GetPassengerAddress()
 	if err != nil {
