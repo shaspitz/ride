@@ -47,7 +47,7 @@ func (k msgServer) RequestRide(goCtx context.Context, msg *types.MsgRequestRide)
 		return nil, err
 	}
 
-	err = k.Keeper.CollectDriverStake(ctx, &storedRide)
+	err = k.Keeper.CollectPassengerStake(ctx, &storedRide)
 	if err != nil {
 		return nil, err
 	}
@@ -87,8 +87,6 @@ func ValidateRequestRide(msg *types.MsgRequestRide) error {
 	if msg.MutualStake < msg.DistanceTip+msg.HourlyPay {
 		return errors.Wrapf(types.ErrRideParameters, "mutual stake is below distance tip + 1 hour pay")
 	}
-
-	// TODO: Enforce that passenger actually possesses mutual stake set by Tx <- Auth module?
 
 	// TODO: Charge any gas here?
 	return nil

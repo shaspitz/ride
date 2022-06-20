@@ -49,7 +49,7 @@ const (
 const (
 	TimeFormat = "2006-01-02 15:04:05.999999999 +0000 UTC"
 	// TODO: Make this hardcoded value configurable.
-	DeadlinePeriod = 5 * time.Minute
+	DeadlinePeriod = 2 * time.Minute
 )
 
 const (

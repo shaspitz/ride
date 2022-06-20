@@ -7,8 +7,6 @@ import (
 )
 
 // Returns an error if the player has not enough funds.
-// TODO: Test atomicity of this method in the context of ride request.
-// TODO: Ie. make sure that if passenger doesn't have enough stake, no ride req will be stored.
 func (k *Keeper) CollectDriverStake(ctx sdk.Context, storedRide *types.StoredRide) error {
 
 	driverAddress, err := storedRide.GetDriverAddress()
@@ -26,8 +24,6 @@ func (k *Keeper) CollectDriverStake(ctx sdk.Context, storedRide *types.StoredRid
 }
 
 // Returns an error if the player has not enough funds.
-// TODO: Test atomicity of this method in the context of ride request.
-// TODO: Ie. make sure that if passenger doesn't have enough stake, no ride req will be stored.
 func (k *Keeper) CollectPassengerStake(ctx sdk.Context, storedRide *types.StoredRide) error {
 
 	passengerAddress, err := storedRide.GetPassengerAddress()
@@ -72,6 +68,7 @@ func (k *Keeper) MustPayout(ctx sdk.Context, storedRide *types.StoredRide) {
 	driveDuration := finishTime.Sub(acceptanceTime)
 
 	// Driver is paid back original stake, plus tip, and hourly pay.
+	// TODO: Fix potential payout bug here.
 	driverPayoutAmount := storedRide.MutualStake + storedRide.DistanceTip + storedRide.PayPerHour*uint64(driveDuration.Hours())
 	driverPayoutInCoin := sdk.NewCoin(sdk.DefaultBondDenom, sdk.NewInt(int64(driverPayoutAmount)))
 

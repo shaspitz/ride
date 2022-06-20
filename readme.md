@@ -5,6 +5,8 @@
 Focuses on the business logic for such an idea, with the assumption that a [proof-of-location](https://tokens-economy.gitbook.io/consensus/chain-based-proof-of-capacity-space/dynamic-proof-of-location) like system would be implemented elsewhere. 
 
 ## Application CLI Commands (WIP)
+Below are some example CLI commands for the ride daemon. Important functionality is included in ```/scripts```. 
+
 ```
 rided tx ride request-ride "some dest" "some other dest" 50 5 5 --from alice --gas auto
 ```
@@ -19,6 +21,9 @@ rided tx ride accept 1 --from bob --gas auto
 ```
 ```
 rided tx ride finish 1 "some loc" --from bob --gas auto
+```
+```
+rided rided query bank balances cosmos16u4a2ajtfqmkn2ermq70cz32czr28g3z8ma26d
 ```
 
 ## Get started
