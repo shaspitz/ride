@@ -2,6 +2,7 @@
 import { Params } from "../ride/params";
 import { NextRide } from "../ride/next_ride";
 import { StoredRide } from "../ride/stored_ride";
+import { RatingStruct } from "../ride/rating_struct";
 import { Writer, Reader } from "protobufjs/minimal";
 
 export const protobufPackage = "smarshallspitzbart.ride.ride";
@@ -10,8 +11,9 @@ export const protobufPackage = "smarshallspitzbart.ride.ride";
 export interface GenesisState {
   params: Params | undefined;
   nextRide: NextRide | undefined;
-  /** this line is used by starport scaffolding # genesis/proto/state */
   storedRideList: StoredRide[];
+  /** this line is used by starport scaffolding # genesis/proto/state */
+  ratingStructList: RatingStruct[];
 }
 
 const baseGenesisState: object = {};
@@ -27,6 +29,9 @@ export const GenesisState = {
     for (const v of message.storedRideList) {
       StoredRide.encode(v!, writer.uint32(26).fork()).ldelim();
     }
+    for (const v of message.ratingStructList) {
+      RatingStruct.encode(v!, writer.uint32(34).fork()).ldelim();
+    }
     return writer;
   },
 
@@ -35,6 +40,7 @@ export const GenesisState = {
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseGenesisState } as GenesisState;
     message.storedRideList = [];
+    message.ratingStructList = [];
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -49,6 +55,11 @@ export const GenesisState = {
             StoredRide.decode(reader, reader.uint32())
           );
           break;
+        case 4:
+          message.ratingStructList.push(
+            RatingStruct.decode(reader, reader.uint32())
+          );
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -60,6 +71,7 @@ export const GenesisState = {
   fromJSON(object: any): GenesisState {
     const message = { ...baseGenesisState } as GenesisState;
     message.storedRideList = [];
+    message.ratingStructList = [];
     if (object.params !== undefined && object.params !== null) {
       message.params = Params.fromJSON(object.params);
     } else {
@@ -73,6 +85,14 @@ export const GenesisState = {
     if (object.storedRideList !== undefined && object.storedRideList !== null) {
       for (const e of object.storedRideList) {
         message.storedRideList.push(StoredRide.fromJSON(e));
+      }
+    }
+    if (
+      object.ratingStructList !== undefined &&
+      object.ratingStructList !== null
+    ) {
+      for (const e of object.ratingStructList) {
+        message.ratingStructList.push(RatingStruct.fromJSON(e));
       }
     }
     return message;
@@ -93,12 +113,20 @@ export const GenesisState = {
     } else {
       obj.storedRideList = [];
     }
+    if (message.ratingStructList) {
+      obj.ratingStructList = message.ratingStructList.map((e) =>
+        e ? RatingStruct.toJSON(e) : undefined
+      );
+    } else {
+      obj.ratingStructList = [];
+    }
     return obj;
   },
 
   fromPartial(object: DeepPartial<GenesisState>): GenesisState {
     const message = { ...baseGenesisState } as GenesisState;
     message.storedRideList = [];
+    message.ratingStructList = [];
     if (object.params !== undefined && object.params !== null) {
       message.params = Params.fromPartial(object.params);
     } else {
@@ -112,6 +140,14 @@ export const GenesisState = {
     if (object.storedRideList !== undefined && object.storedRideList !== null) {
       for (const e of object.storedRideList) {
         message.storedRideList.push(StoredRide.fromPartial(e));
+      }
+    }
+    if (
+      object.ratingStructList !== undefined &&
+      object.ratingStructList !== null
+    ) {
+      for (const e of object.ratingStructList) {
+        message.ratingStructList.push(RatingStruct.fromPartial(e));
       }
     }
     return message;

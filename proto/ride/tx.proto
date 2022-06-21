@@ -10,6 +10,7 @@ service Msg {
       rpc RequestRide(MsgRequestRide) returns (MsgRequestRideResponse);
   rpc Accept(MsgAccept) returns (MsgAcceptResponse);
   rpc Finish(MsgFinish) returns (MsgFinishResponse);
+  rpc Rate(MsgRate) returns (MsgRateResponse);
 // this line is used by starport scaffolding # proto/tx/rpc
 }
 
@@ -42,6 +43,17 @@ message MsgFinish {
 }
 
 message MsgFinishResponse {
+  bool success = 1;
+}
+
+message MsgRate {
+  string creator = 1;
+  string rideId = 2;
+  string ratee = 3;
+  float rating = 4;
+}
+
+message MsgRateResponse {
   bool success = 1;
 }
 

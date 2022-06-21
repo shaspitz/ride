@@ -21,4 +21,6 @@ var (
 	ErrMutualStake         = sdkerrors.Register(ModuleName, 1110, "error processing mutual stake")
 	ErrCantRefundStake     = sdkerrors.Register(ModuleName, 1111, "cannot refund stake")
 	ErrRideParameters      = sdkerrors.Register(ModuleName, 1112, "ride parameters are invalid")
+	ErrInvalidAddressCombo = sdkerrors.Register(ModuleName, 1113, "address combo is invalid to process rating")
+	ErrInvalidRatingValue  = sdkerrors.Register(ModuleName, 1114, "rating must be 0-10")
 )

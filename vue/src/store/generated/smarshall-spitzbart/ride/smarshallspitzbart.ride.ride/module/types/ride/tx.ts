@@ -36,6 +36,17 @@ export interface MsgFinishResponse {
   success: boolean;
 }
 
+export interface MsgRate {
+  creator: string;
+  rideId: string;
+  ratee: string;
+  rating: number;
+}
+
+export interface MsgRateResponse {
+  success: string;
+}
+
 const baseMsgRequestRide: object = {
   creator: "",
   startLocation: "",
@@ -518,12 +529,174 @@ export const MsgFinishResponse = {
   },
 };
 
+const baseMsgRate: object = { creator: "", rideId: "", ratee: "", rating: 0 };
+
+export const MsgRate = {
+  encode(message: MsgRate, writer: Writer = Writer.create()): Writer {
+    if (message.creator !== "") {
+      writer.uint32(10).string(message.creator);
+    }
+    if (message.rideId !== "") {
+      writer.uint32(18).string(message.rideId);
+    }
+    if (message.ratee !== "") {
+      writer.uint32(26).string(message.ratee);
+    }
+    if (message.rating !== 0) {
+      writer.uint32(32).uint64(message.rating);
+    }
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): MsgRate {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseMsgRate } as MsgRate;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.creator = reader.string();
+          break;
+        case 2:
+          message.rideId = reader.string();
+          break;
+        case 3:
+          message.ratee = reader.string();
+          break;
+        case 4:
+          message.rating = longToNumber(reader.uint64() as Long);
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MsgRate {
+    const message = { ...baseMsgRate } as MsgRate;
+    if (object.creator !== undefined && object.creator !== null) {
+      message.creator = String(object.creator);
+    } else {
+      message.creator = "";
+    }
+    if (object.rideId !== undefined && object.rideId !== null) {
+      message.rideId = String(object.rideId);
+    } else {
+      message.rideId = "";
+    }
+    if (object.ratee !== undefined && object.ratee !== null) {
+      message.ratee = String(object.ratee);
+    } else {
+      message.ratee = "";
+    }
+    if (object.rating !== undefined && object.rating !== null) {
+      message.rating = Number(object.rating);
+    } else {
+      message.rating = 0;
+    }
+    return message;
+  },
+
+  toJSON(message: MsgRate): unknown {
+    const obj: any = {};
+    message.creator !== undefined && (obj.creator = message.creator);
+    message.rideId !== undefined && (obj.rideId = message.rideId);
+    message.ratee !== undefined && (obj.ratee = message.ratee);
+    message.rating !== undefined && (obj.rating = message.rating);
+    return obj;
+  },
+
+  fromPartial(object: DeepPartial<MsgRate>): MsgRate {
+    const message = { ...baseMsgRate } as MsgRate;
+    if (object.creator !== undefined && object.creator !== null) {
+      message.creator = object.creator;
+    } else {
+      message.creator = "";
+    }
+    if (object.rideId !== undefined && object.rideId !== null) {
+      message.rideId = object.rideId;
+    } else {
+      message.rideId = "";
+    }
+    if (object.ratee !== undefined && object.ratee !== null) {
+      message.ratee = object.ratee;
+    } else {
+      message.ratee = "";
+    }
+    if (object.rating !== undefined && object.rating !== null) {
+      message.rating = object.rating;
+    } else {
+      message.rating = 0;
+    }
+    return message;
+  },
+};
+
+const baseMsgRateResponse: object = { success: "" };
+
+export const MsgRateResponse = {
+  encode(message: MsgRateResponse, writer: Writer = Writer.create()): Writer {
+    if (message.success !== "") {
+      writer.uint32(10).string(message.success);
+    }
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): MsgRateResponse {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseMsgRateResponse } as MsgRateResponse;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.success = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MsgRateResponse {
+    const message = { ...baseMsgRateResponse } as MsgRateResponse;
+    if (object.success !== undefined && object.success !== null) {
+      message.success = String(object.success);
+    } else {
+      message.success = "";
+    }
+    return message;
+  },
+
+  toJSON(message: MsgRateResponse): unknown {
+    const obj: any = {};
+    message.success !== undefined && (obj.success = message.success);
+    return obj;
+  },
+
+  fromPartial(object: DeepPartial<MsgRateResponse>): MsgRateResponse {
+    const message = { ...baseMsgRateResponse } as MsgRateResponse;
+    if (object.success !== undefined && object.success !== null) {
+      message.success = object.success;
+    } else {
+      message.success = "";
+    }
+    return message;
+  },
+};
+
 /** Msg defines the Msg service. */
 export interface Msg {
   RequestRide(request: MsgRequestRide): Promise<MsgRequestRideResponse>;
   Accept(request: MsgAccept): Promise<MsgAcceptResponse>;
-  /** this line is used by starport scaffolding # proto/tx/rpc */
   Finish(request: MsgFinish): Promise<MsgFinishResponse>;
+  /** this line is used by starport scaffolding # proto/tx/rpc */
+  Rate(request: MsgRate): Promise<MsgRateResponse>;
 }
 
 export class MsgClientImpl implements Msg {
@@ -561,6 +734,16 @@ export class MsgClientImpl implements Msg {
       data
     );
     return promise.then((data) => MsgFinishResponse.decode(new Reader(data)));
+  }
+
+  Rate(request: MsgRate): Promise<MsgRateResponse> {
+    const data = MsgRate.encode(request).finish();
+    const promise = this.rpc.request(
+      "smarshallspitzbart.ride.ride.Msg",
+      "Rate",
+      data
+    );
+    return promise.then((data) => MsgRateResponse.decode(new Reader(data)));
   }
 }
 

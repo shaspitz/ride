@@ -21,6 +21,10 @@ export interface RideMsgFinishResponse {
   success?: boolean;
 }
 
+export interface RideMsgRateResponse {
+  success?: string;
+}
+
 export interface RideMsgRequestRideResponse {
   idValue?: string;
 }
@@ -38,6 +42,21 @@ export interface RideNextRide {
  * Params defines the parameters for the module.
  */
 export type RideParams = object;
+
+export interface RideQueryAllRatingStructResponse {
+  ratingStruct?: RideRatingStruct[];
+
+  /**
+   * PageResponse is to be embedded in gRPC response messages where the
+   * corresponding request message has used PageRequest.
+   *
+   *  message SomeResponse {
+   *          repeated Bar results = 1;
+   *          PageResponse page = 2;
+   *  }
+   */
+  pagination?: V1Beta1PageResponse;
+}
 
 export interface RideQueryAllStoredRideResponse {
   storedRide?: RideStoredRide[];
@@ -58,6 +77,10 @@ export interface RideQueryGetNextRideResponse {
   NextRide?: RideNextRide;
 }
 
+export interface RideQueryGetRatingStructResponse {
+  ratingStruct?: RideRatingStruct;
+}
+
 export interface RideQueryGetStoredRideResponse {
   storedRide?: RideStoredRide;
 }
@@ -68,6 +91,13 @@ export interface RideQueryGetStoredRideResponse {
 export interface RideQueryParamsResponse {
   /** params holds all the parameters of this module. */
   params?: RideParams;
+}
+
+export interface RideRatingStruct {
+  index?: string;
+
+  /** @format uint64 */
+  rating?: string;
 }
 
 export interface RideStoredRide {
@@ -385,6 +415,48 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
   queryParams = (params: RequestParams = {}) =>
     this.request<RideQueryParamsResponse, RpcStatus>({
       path: `/smarshall-spitzbart/ride/ride/params`,
+      method: "GET",
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryRatingStructAll
+   * @summary Queries a list of RatingStruct items.
+   * @request GET:/smarshall-spitzbart/ride/ride/rating_struct
+   */
+  queryRatingStructAll = (
+    query?: {
+      "pagination.key"?: string;
+      "pagination.offset"?: string;
+      "pagination.limit"?: string;
+      "pagination.count_total"?: boolean;
+      "pagination.reverse"?: boolean;
+    },
+    params: RequestParams = {},
+  ) =>
+    this.request<RideQueryAllRatingStructResponse, RpcStatus>({
+      path: `/smarshall-spitzbart/ride/ride/rating_struct`,
+      method: "GET",
+      query: query,
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryRatingStruct
+   * @summary Queries a RatingStruct by index.
+   * @request GET:/smarshall-spitzbart/ride/ride/rating_struct/{index}
+   */
+  queryRatingStruct = (index: string, params: RequestParams = {}) =>
+    this.request<RideQueryGetRatingStructResponse, RpcStatus>({
+      path: `/smarshall-spitzbart/ride/ride/rating_struct/${index}`,
       method: "GET",
       format: "json",
       ...params,

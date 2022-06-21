@@ -25,6 +25,14 @@ func TestGenesis(t *testing.T) {
 				Index: "1",
 			},
 		},
+		RatingStructList: []types.RatingStruct{
+			{
+				Index: "0",
+			},
+			{
+				Index: "1",
+			},
+		},
 		// this line is used by starport scaffolding # genesis/test/state
 	}
 
@@ -38,5 +46,6 @@ func TestGenesis(t *testing.T) {
 
 	require.Equal(t, genesisState.NextRide, got.NextRide)
 	require.ElementsMatch(t, genesisState.StoredRideList, got.StoredRideList)
+	require.ElementsMatch(t, genesisState.RatingStructList, got.RatingStructList)
 	// this line is used by starport scaffolding # genesis/test/assert
 }

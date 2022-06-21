@@ -15,7 +15,8 @@ func DefaultGenesis() *GenesisState {
 			FifoHead: NoFifoIdKey,
 			FifoTail: NoFifoIdKey,
 		},
-		StoredRideList: []StoredRide{},
+		StoredRideList:   []StoredRide{},
+		RatingStructList: []RatingStruct{},
 		// this line is used by starport scaffolding # genesis/types/default
 		Params: DefaultParams(),
 	}
@@ -33,6 +34,16 @@ func (gs GenesisState) Validate() error {
 			return fmt.Errorf("duplicated index for storedRide")
 		}
 		storedRideIndexMap[index] = struct{}{}
+	}
+	// Check for duplicated index in ratingStruct
+	ratingStructIndexMap := make(map[string]struct{})
+
+	for _, elem := range gs.RatingStructList {
+		index := string(RatingStructKey(elem.Index))
+		if _, ok := ratingStructIndexMap[index]; ok {
+			return fmt.Errorf("duplicated index for ratingStruct")
+		}
+		ratingStructIndexMap[index] = struct{}{}
 	}
 	// this line is used by starport scaffolding # genesis/types/validate
 
