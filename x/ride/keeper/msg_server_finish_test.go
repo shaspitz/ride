@@ -160,11 +160,11 @@ func TestFinishRideStorage(t *testing.T) {
 	require.Nil(t, err)
 	acceptance, err := ride1.GetAcceptanceTimeFormatted()
 	require.Nil(t, err)
-	require.EqualValues(t, deadline.Sub(acceptance), 5*time.Minute)
+	require.EqualValues(t, deadline.Sub(acceptance), 2*time.Minute)
 
 	finished, err := ride1.GetFinishTimeFormatted()
 	require.Nil(t, err)
-	require.EqualValues(t, deadline.Sub(finished), 5*time.Minute)
+	require.EqualValues(t, deadline.Sub(finished), 2*time.Minute)
 
 	require.True(t, ride1.HasAssignedDriver())
 	require.True(t, ride1.IsFinished())

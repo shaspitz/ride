@@ -112,7 +112,7 @@ func TestAcceptRideStorage(t *testing.T) {
 	require.Nil(t, err)
 	acceptance, err := ride1.GetAcceptanceTimeFormatted()
 	require.Nil(t, err)
-	require.EqualValues(t, deadline.Sub(acceptance), 5*time.Minute)
+	require.EqualValues(t, deadline.Sub(acceptance), 2*time.Minute)
 
 	require.Empty(t, ride1.FinishTime)
 	require.Empty(t, ride1.FinishLocation)

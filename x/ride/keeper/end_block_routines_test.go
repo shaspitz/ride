@@ -127,7 +127,7 @@ func TestExpiredActiveRide(t *testing.T) {
 	storedRide, found := k.GetStoredRide(ctx, "1")
 	require.True(t, found)
 	require.True(t, storedRide.IsFinished())
-	require.EqualValues(t, types.TimeToString(ctx.BlockTime().Add(5*time.Minute)), storedRide.Deadline)
+	require.EqualValues(t, types.TimeToString(ctx.BlockTime().Add(2*time.Minute)), storedRide.Deadline)
 	require.EqualValues(t, types.TimeToString(ctx.BlockTime()), storedRide.FinishTime)
 	require.EqualValues(t, "unknown", storedRide.FinishLocation)
 
