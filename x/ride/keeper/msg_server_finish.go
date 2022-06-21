@@ -27,6 +27,8 @@ func (k msgServer) Finish(goCtx context.Context, msg *types.MsgFinish) (*types.M
 		return &types.MsgFinishResponse{Success: false}, err
 	}
 
+	ctx.GasMeter().ConsumeGas(types.FinishRideGas, "Finish Ride")
+
 	// No driver accepted yet in this case. Return funds and erase game.
 	if !storedRide.HasAssignedDriver() {
 		k.Keeper.MustRefundStakes(ctx, &storedRide)

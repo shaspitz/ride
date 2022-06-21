@@ -65,3 +65,9 @@ const (
 	ActiveRideExpiredEventKey   = "ActiveRideExpired"
 	FinishedRideExpiredEventKey = "FinishedRideExpired"
 )
+
+const (
+	RequestRideGas = 10
+	AcceptRideGas  = 5
+	FinishRideGas  = 5
+)

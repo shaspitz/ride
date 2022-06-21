@@ -27,6 +27,8 @@ func (k msgServer) Accept(goCtx context.Context, msg *types.MsgAccept) (*types.M
 		return &types.MsgAcceptResponse{Success: false}, err
 	}
 
+	ctx.GasMeter().ConsumeGas(types.AcceptRideGas, "Accept Ride")
+
 	// Assign driver to ride.
 	storedRide.Driver = msg.Creator
 
@@ -40,9 +42,6 @@ func (k msgServer) Accept(goCtx context.Context, msg *types.MsgAccept) (*types.M
 	// Store acceptance time in default format.
 	storedRide.AcceptanceTime = types.TimeToString(ctx.BlockTime())
 
-	// TODO: Test to see if this whole method runs atomically..
-	// Ie. if an error is returned, does the state just get thrown out by
-	// any validator who executes the msg?
 	err = k.Keeper.CollectDriverStake(ctx, &storedRide)
 	if err != nil {
 		return nil, err
@@ -80,7 +79,5 @@ func ValidateAcceptRide(msg *types.MsgAccept, storedRide types.StoredRide) error
 		return errors.Wrapf(types.ErrCannotDriveYourself,
 			"%s is the passenger of this ride, and cannot be the driver", storedRide.Passenger)
 	}
-	// TODO: Enforce that driver actually possesses mutual stake set by passenger.
-	// TODO: Charge any gas here?
 	return nil
 }

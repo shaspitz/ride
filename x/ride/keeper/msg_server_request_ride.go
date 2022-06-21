@@ -20,6 +20,8 @@ func (k msgServer) RequestRide(goCtx context.Context, msg *types.MsgRequestRide)
 		return nil, err
 	}
 
+	ctx.GasMeter().ConsumeGas(types.RequestRideGas, "Request Ride")
+
 	nextRide, found := k.Keeper.GetNextRide(ctx)
 	if !found {
 		panic("NextRide not found")
@@ -87,7 +89,5 @@ func ValidateRequestRide(msg *types.MsgRequestRide) error {
 	if msg.MutualStake < msg.DistanceTip+msg.HourlyPay {
 		return errors.Wrapf(types.ErrRideParameters, "mutual stake is below distance tip + 1 hour pay")
 	}
-
-	// TODO: Charge any gas here?
 	return nil
 }
