@@ -1,23 +1,22 @@
 /* eslint-disable */
-import * as Long from "long";
-import { util, configure, Writer, Reader } from "protobufjs/minimal";
+import { Writer, Reader } from "protobufjs/minimal";
 
 export const protobufPackage = "smarshallspitzbart.ride.ride";
 
 export interface RatingStruct {
   index: string;
-  rating: number;
+  rating: string;
 }
 
-const baseRatingStruct: object = { index: "", rating: 0 };
+const baseRatingStruct: object = { index: "", rating: "" };
 
 export const RatingStruct = {
   encode(message: RatingStruct, writer: Writer = Writer.create()): Writer {
     if (message.index !== "") {
       writer.uint32(10).string(message.index);
     }
-    if (message.rating !== 0) {
-      writer.uint32(16).uint64(message.rating);
+    if (message.rating !== "") {
+      writer.uint32(18).string(message.rating);
     }
     return writer;
   },
@@ -33,7 +32,7 @@ export const RatingStruct = {
           message.index = reader.string();
           break;
         case 2:
-          message.rating = longToNumber(reader.uint64() as Long);
+          message.rating = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
@@ -51,9 +50,9 @@ export const RatingStruct = {
       message.index = "";
     }
     if (object.rating !== undefined && object.rating !== null) {
-      message.rating = Number(object.rating);
+      message.rating = String(object.rating);
     } else {
-      message.rating = 0;
+      message.rating = "";
     }
     return message;
   },
@@ -75,21 +74,11 @@ export const RatingStruct = {
     if (object.rating !== undefined && object.rating !== null) {
       message.rating = object.rating;
     } else {
-      message.rating = 0;
+      message.rating = "";
     }
     return message;
   },
 };
-
-declare var self: any | undefined;
-declare var window: any | undefined;
-var globalThis: any = (() => {
-  if (typeof globalThis !== "undefined") return globalThis;
-  if (typeof self !== "undefined") return self;
-  if (typeof window !== "undefined") return window;
-  if (typeof global !== "undefined") return global;
-  throw "Unable to locate global object";
-})();
 
 type Builtin = Date | Function | Uint8Array | string | number | undefined;
 export type DeepPartial<T> = T extends Builtin
@@ -101,15 +90,3 @@ export type DeepPartial<T> = T extends Builtin
   : T extends {}
   ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
-
-function longToNumber(long: Long): number {
-  if (long.gt(Number.MAX_SAFE_INTEGER)) {
-    throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
-  }
-  return long.toNumber();
-}
-
-if (util.Long !== Long) {
-  util.Long = Long as any;
-  configure();
-}

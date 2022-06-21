@@ -2,12 +2,15 @@ package keeper
 
 import (
 	"context"
+	"fmt"
+	"strconv"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	errors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/smarshall-spitzbart/ride/x/ride/types"
 )
 
+// Average is serialized to string due to amino codec not being able to handle float serialization.
 func (k msgServer) Rate(goCtx context.Context, msg *types.MsgRate) (*types.MsgRateResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
@@ -25,13 +28,20 @@ func (k msgServer) Rate(goCtx context.Context, msg *types.MsgRate) (*types.MsgRa
 	if !found {
 		rating = types.RatingStruct{
 			Index:  msg.Ratee,
-			Rating: 0, // New member starts out with a rating of 0 to be built up.
+			Rating: fmt.Sprintf("%f", 0.0), // New member starts out with a rating of 0 to be built up.
 		}
 	}
+	currentRating, err := strconv.ParseFloat(rating.Rating, 64)
+	if err != nil {
+		return &types.MsgRateResponse{}, err
+	}
+	newRating, err := strconv.ParseFloat(msg.Rating, 64)
+	if err != nil {
+		return &types.MsgRateResponse{}, err
+	}
 
-	rating.Rating = types.ComputePseudoAverage(rating.Rating, msg.Rating)
+	rating.Rating = fmt.Sprintf("%f", types.ComputePseudoAverage(currentRating, newRating))
 	k.Keeper.SetRatingStruct(ctx, rating)
-
 	return &types.MsgRateResponse{Success: true}, nil
 }
 
@@ -42,9 +52,14 @@ func ValidateRate(msg *types.MsgRate, storedRide types.StoredRide) error {
 
 	if !validAddressesToRateDriver && !validAddressesToRatePassenger {
 		return errors.Wrapf(types.ErrInvalidAddressCombo,
-			"passenger for ride is stored as %s and driver is %s", storedRide.Passenger, storedRide.Driver)
+			"passenger for ride is stored as %s and driver is %s. Msg creator is %s and ratee is %s",
+			storedRide.Passenger, storedRide.Driver, msg.Creator, msg.Ratee)
 	}
-	if msg.Rating > 10 { // Implicit assumption: uint cant be negative.
+	ratingValue, err := strconv.ParseFloat(msg.Rating, 64)
+	if err != nil {
+		return err
+	}
+	if ratingValue > 10 || ratingValue < 0 {
 		return types.ErrInvalidRatingValue
 	}
 	return nil

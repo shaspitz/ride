@@ -7,7 +7,6 @@ import (
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
 	"github.com/smarshall-spitzbart/ride/x/ride/types"
-	"github.com/spf13/cast"
 	"github.com/spf13/cobra"
 )
 
@@ -21,7 +20,7 @@ func CmdRate() *cobra.Command {
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			argRideId := args[0]
 			argRatee := args[1]
-			argRating, err := cast.ToFloat32E(args[2])
+			argRating := args[2]
 			if err != nil {
 				return err
 			}

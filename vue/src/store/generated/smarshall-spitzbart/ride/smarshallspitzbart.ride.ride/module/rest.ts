@@ -22,7 +22,7 @@ export interface RideMsgFinishResponse {
 }
 
 export interface RideMsgRateResponse {
-  success?: string;
+  success?: boolean;
 }
 
 export interface RideMsgRequestRideResponse {
@@ -95,8 +95,6 @@ export interface RideQueryParamsResponse {
 
 export interface RideRatingStruct {
   index?: string;
-
-  /** @format uint64 */
   rating?: string;
 }
 

@@ -50,7 +50,7 @@ message MsgRate {
   string creator = 1;
   string rideId = 2;
   string ratee = 3;
-  float rating = 4;
+  string rating = 4;
 }
 
 message MsgRateResponse {

@@ -24,6 +24,11 @@ rided tx ride finish 1 "some loc" --from bob --gas auto
 ```
 rided rided query bank balances cosmos16u4a2ajtfqmkn2ermq70cz32czr28g3z8ma26d
 ```
+```
+rided tx ride rate 1 $bob 9.5 --from alice --gas auto 
+```
+rided q ride list-rating-struct
+```
 
 ## Get started
 

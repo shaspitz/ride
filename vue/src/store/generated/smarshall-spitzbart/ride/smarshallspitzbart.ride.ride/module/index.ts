@@ -4,17 +4,17 @@ import { StdFee } from "@cosmjs/launchpad";
 import { SigningStargateClient } from "@cosmjs/stargate";
 import { Registry, OfflineSigner, EncodeObject, DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
 import { Api } from "./rest";
+import { MsgFinish } from "./types/ride/tx";
+import { MsgAccept } from "./types/ride/tx";
 import { MsgRate } from "./types/ride/tx";
 import { MsgRequestRide } from "./types/ride/tx";
-import { MsgAccept } from "./types/ride/tx";
-import { MsgFinish } from "./types/ride/tx";
 
 
 const types = [
+  ["/smarshallspitzbart.ride.ride.MsgFinish", MsgFinish],
+  ["/smarshallspitzbart.ride.ride.MsgAccept", MsgAccept],
   ["/smarshallspitzbart.ride.ride.MsgRate", MsgRate],
   ["/smarshallspitzbart.ride.ride.MsgRequestRide", MsgRequestRide],
-  ["/smarshallspitzbart.ride.ride.MsgAccept", MsgAccept],
-  ["/smarshallspitzbart.ride.ride.MsgFinish", MsgFinish],
   
 ];
 export const MissingWalletError = new Error("wallet is required");
@@ -47,10 +47,10 @@ const txClient = async (wallet: OfflineSigner, { addr: addr }: TxClientOptions =
 
   return {
     signAndBroadcast: (msgs: EncodeObject[], { fee, memo }: SignAndBroadcastOptions = {fee: defaultFee, memo: ""}) => client.signAndBroadcast(address, msgs, fee,memo),
+    msgFinish: (data: MsgFinish): EncodeObject => ({ typeUrl: "/smarshallspitzbart.ride.ride.MsgFinish", value: MsgFinish.fromPartial( data ) }),
+    msgAccept: (data: MsgAccept): EncodeObject => ({ typeUrl: "/smarshallspitzbart.ride.ride.MsgAccept", value: MsgAccept.fromPartial( data ) }),
     msgRate: (data: MsgRate): EncodeObject => ({ typeUrl: "/smarshallspitzbart.ride.ride.MsgRate", value: MsgRate.fromPartial( data ) }),
     msgRequestRide: (data: MsgRequestRide): EncodeObject => ({ typeUrl: "/smarshallspitzbart.ride.ride.MsgRequestRide", value: MsgRequestRide.fromPartial( data ) }),
-    msgAccept: (data: MsgAccept): EncodeObject => ({ typeUrl: "/smarshallspitzbart.ride.ride.MsgAccept", value: MsgAccept.fromPartial( data ) }),
-    msgFinish: (data: MsgFinish): EncodeObject => ({ typeUrl: "/smarshallspitzbart.ride.ride.MsgFinish", value: MsgFinish.fromPartial( data ) }),
     
   };
 };

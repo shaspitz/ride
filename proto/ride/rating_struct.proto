@@ -5,7 +5,7 @@ option go_package = "github.com/smarshall-spitzbart/ride/x/ride/types";
 
 message RatingStruct {
   string index = 1; 
-  float rating = 2; 
+  string rating = 2; 
   
 }
 

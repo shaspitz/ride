@@ -29599,7 +29599,6 @@ paths:
                       type: string
                     rating:
                       type: string
-                      format: uint64
               pagination:
                 type: object
                 properties:
@@ -29721,7 +29720,6 @@ paths:
                     type: string
                   rating:
                     type: string
-                    format: uint64
         default:
           description: An unexpected error response.
           schema:
@@ -51127,7 +51125,7 @@ definitions:
     type: object
     properties:
       success:
-        type: string
+        type: boolean
   smarshallspitzbart.ride.ride.MsgRequestRideResponse:
     type: object
     properties:
@@ -51161,7 +51159,6 @@ definitions:
               type: string
             rating:
               type: string
-              format: uint64
       pagination:
         type: object
         properties:
@@ -51275,7 +51272,6 @@ definitions:
             type: string
           rating:
             type: string
-            format: uint64
   smarshallspitzbart.ride.ride.QueryGetStoredRideResponse:
     type: object
     properties:
@@ -51325,7 +51321,6 @@ definitions:
         type: string
       rating:
         type: string
-        format: uint64
   smarshallspitzbart.ride.ride.StoredRide:
     type: object
     properties:

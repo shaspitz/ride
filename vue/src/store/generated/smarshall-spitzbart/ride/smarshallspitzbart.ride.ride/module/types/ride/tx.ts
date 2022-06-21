@@ -40,11 +40,11 @@ export interface MsgRate {
   creator: string;
   rideId: string;
   ratee: string;
-  rating: number;
+  rating: string;
 }
 
 export interface MsgRateResponse {
-  success: string;
+  success: boolean;
 }
 
 const baseMsgRequestRide: object = {
@@ -529,7 +529,7 @@ export const MsgFinishResponse = {
   },
 };
 
-const baseMsgRate: object = { creator: "", rideId: "", ratee: "", rating: 0 };
+const baseMsgRate: object = { creator: "", rideId: "", ratee: "", rating: "" };
 
 export const MsgRate = {
   encode(message: MsgRate, writer: Writer = Writer.create()): Writer {
@@ -542,8 +542,8 @@ export const MsgRate = {
     if (message.ratee !== "") {
       writer.uint32(26).string(message.ratee);
     }
-    if (message.rating !== 0) {
-      writer.uint32(32).uint64(message.rating);
+    if (message.rating !== "") {
+      writer.uint32(34).string(message.rating);
     }
     return writer;
   },
@@ -565,7 +565,7 @@ export const MsgRate = {
           message.ratee = reader.string();
           break;
         case 4:
-          message.rating = longToNumber(reader.uint64() as Long);
+          message.rating = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
@@ -593,9 +593,9 @@ export const MsgRate = {
       message.ratee = "";
     }
     if (object.rating !== undefined && object.rating !== null) {
-      message.rating = Number(object.rating);
+      message.rating = String(object.rating);
     } else {
-      message.rating = 0;
+      message.rating = "";
     }
     return message;
   },
@@ -629,18 +629,18 @@ export const MsgRate = {
     if (object.rating !== undefined && object.rating !== null) {
       message.rating = object.rating;
     } else {
-      message.rating = 0;
+      message.rating = "";
     }
     return message;
   },
 };
 
-const baseMsgRateResponse: object = { success: "" };
+const baseMsgRateResponse: object = { success: false };
 
 export const MsgRateResponse = {
   encode(message: MsgRateResponse, writer: Writer = Writer.create()): Writer {
-    if (message.success !== "") {
-      writer.uint32(10).string(message.success);
+    if (message.success === true) {
+      writer.uint32(8).bool(message.success);
     }
     return writer;
   },
@@ -653,7 +653,7 @@ export const MsgRateResponse = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.success = reader.string();
+          message.success = reader.bool();
           break;
         default:
           reader.skipType(tag & 7);
@@ -666,9 +666,9 @@ export const MsgRateResponse = {
   fromJSON(object: any): MsgRateResponse {
     const message = { ...baseMsgRateResponse } as MsgRateResponse;
     if (object.success !== undefined && object.success !== null) {
-      message.success = String(object.success);
+      message.success = Boolean(object.success);
     } else {
-      message.success = "";
+      message.success = false;
     }
     return message;
   },
@@ -684,7 +684,7 @@ export const MsgRateResponse = {
     if (object.success !== undefined && object.success !== null) {
       message.success = object.success;
     } else {
-      message.success = "";
+      message.success = false;
     }
     return message;
   },

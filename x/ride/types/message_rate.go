@@ -9,7 +9,7 @@ const TypeMsgRate = "rate"
 
 var _ sdk.Msg = &MsgRate{}
 
-func NewMsgRate(creator string, rideId string, ratee string, rating float32) *MsgRate {
+func NewMsgRate(creator string, rideId string, ratee string, rating string) *MsgRate {
 	return &MsgRate{
 		Creator: creator,
 		RideId:  rideId,
