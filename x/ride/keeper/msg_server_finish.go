@@ -58,7 +58,7 @@ func (k msgServer) Finish(goCtx context.Context, msg *types.MsgFinish) (*types.M
 }
 
 func ValidateFinishRide(msg *types.MsgFinish, storedRide types.StoredRide) error {
-	if msg.Creator != storedRide.Passenger && msg.Creator != storedRide.Driver {
+	if msg.Creator != storedRide.PassengerAddress && msg.Creator != storedRide.DriverAddress {
 		return errors.Wrapf(types.ErrIrrelevantRide, "%s is not associated with ride %s",
 			msg.Creator, msg.IdValue)
 	}

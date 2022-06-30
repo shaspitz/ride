@@ -47,13 +47,13 @@ func (k msgServer) Rate(goCtx context.Context, msg *types.MsgRate) (*types.MsgRa
 
 func ValidateRate(msg *types.MsgRate, storedRide types.StoredRide) error {
 
-	validAddressesToRateDriver := msg.Creator == storedRide.Passenger && msg.Ratee == storedRide.Driver
-	validAddressesToRatePassenger := msg.Creator == storedRide.Driver && msg.Ratee == storedRide.Passenger
+	validAddressesToRateDriver := msg.Creator == storedRide.PassengerAddress && msg.Ratee == storedRide.DriverAddress
+	validAddressesToRatePassenger := msg.Creator == storedRide.DriverAddress && msg.Ratee == storedRide.PassengerAddress
 
 	if !validAddressesToRateDriver && !validAddressesToRatePassenger {
 		return errors.Wrapf(types.ErrInvalidAddressCombo,
 			"passenger for ride is stored as %s and driver is %s. Msg creator is %s and ratee is %s",
-			storedRide.Passenger, storedRide.Driver, msg.Creator, msg.Ratee)
+			storedRide.PassengerAddress, storedRide.DriverAddress, msg.Creator, msg.Ratee)
 	}
 	ratingValue, err := strconv.ParseFloat(msg.Rating, 64)
 	if err != nil {

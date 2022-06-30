@@ -30,10 +30,10 @@ func (k msgServer) Accept(goCtx context.Context, msg *types.MsgAccept) (*types.M
 	ctx.GasMeter().ConsumeGas(types.AcceptRideGas, "Accept Ride")
 
 	// Assign driver to ride.
-	storedRide.Driver = msg.Creator
+	storedRide.DriverAddress = msg.Creator
 
 	// Validate assigned driver address, could be in unit test to save gas.
-	_, err = storedRide.GetDriverAddress()
+	_, err = storedRide.GetDriverSdkAddress()
 	if err != nil {
 		return &types.MsgAcceptResponse{Success: false},
 			errors.Wrapf(types.ErrInvalidDriver, "invalid driver address %s", msg.IdValue)
@@ -57,7 +57,8 @@ func (k msgServer) Accept(goCtx context.Context, msg *types.MsgAccept) (*types.M
 		sdk.NewEvent(sdk.EventTypeMessage,
 			sdk.NewAttribute(sdk.AttributeKeyModule, types.ModuleName),
 			sdk.NewAttribute(sdk.AttributeKeyAction, types.AcceptRideEventKey),
-			sdk.NewAttribute(types.AcceptRideEventDriver, storedRide.Driver),
+			sdk.NewAttribute(types.AcceptRideEventDriver, storedRide.DriverAddress),
+
 			sdk.NewAttribute(types.AcceptRideEventIdValue, storedRide.Index),
 		),
 	)
@@ -75,9 +76,9 @@ func ValidateAcceptRide(msg *types.MsgAccept, storedRide types.StoredRide) error
 		return errors.Wrapf(types.ErrAssignedDriver, "driver has already been assigned for ride with Id: %s", msg.IdValue)
 	}
 
-	if msg.Creator == storedRide.Passenger {
+	if msg.Creator == storedRide.PassengerAddress {
 		return errors.Wrapf(types.ErrCannotDriveYourself,
-			"%s is the passenger of this ride, and cannot be the driver", storedRide.Passenger)
+			"%s is the passenger of this ride, and cannot be the driver", storedRide.PassengerAddress)
 	}
 	return nil
 }

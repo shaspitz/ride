@@ -137,13 +137,13 @@ func TestFinishRideStorage(t *testing.T) {
 	require.True(t, found1)
 	// Ensure no other fields were mutated, and that ride is now finished.
 	require.EqualValues(t, types.StoredRide{
-		Index:       "1",
-		Destination: "some other loc",
-		Driver:      bob,
-		Passenger:   alice,
-		MutualStake: 50,
-		PayPerHour:  15,
-		DistanceTip: 10,
+		Index:            "1",
+		Destination:      "some other loc",
+		DriverAddress:    bob,
+		PassengerAddress: alice,
+		MutualStake:      50,
+		PayPerHour:       15,
+		DistanceTip:      10,
 		// Block time returns a default value in unit tests, so these two timestamps will be equiv.
 		AcceptanceTime: types.TimeToString(sdk.UnwrapSDKContext(context).BlockTime()),
 		FinishTime:     types.TimeToString(sdk.UnwrapSDKContext(context).BlockTime()),

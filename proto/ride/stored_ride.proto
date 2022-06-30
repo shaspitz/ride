@@ -6,8 +6,9 @@ option go_package = "github.com/smarshall-spitzbart/ride/x/ride/types";
 message StoredRide {
   string index = 1; 
   string destination = 2; 
-  string driver = 3; 
-  string passenger = 4; 
+  // addresses 
+  string driverAddress = 3; 
+  string passengerAddress = 4; 
   string acceptanceTime = 5;
   string finishTime = 6;
   string finishLocation = 7;
@@ -15,6 +16,7 @@ message StoredRide {
   uint64 payPerHour = 9; 
   uint64 distanceTip = 10; 
 
+  // Fields pertaining to FIFO doubly linked list.
   string beforeId = 11;
   string afterId = 12;
   

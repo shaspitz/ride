@@ -9,7 +9,7 @@ import (
 // Returns an error if the player has not enough funds.
 func (k *Keeper) CollectDriverStake(ctx sdk.Context, storedRide *types.StoredRide) error {
 
-	driverAddress, err := storedRide.GetDriverAddress()
+	driverAddress, err := storedRide.GetDriverSdkAddress()
 	if err != nil {
 		panic(err.Error())
 	}
@@ -26,7 +26,7 @@ func (k *Keeper) CollectDriverStake(ctx sdk.Context, storedRide *types.StoredRid
 // Returns an error if the player has not enough funds.
 func (k *Keeper) CollectPassengerStake(ctx sdk.Context, storedRide *types.StoredRide) error {
 
-	passengerAddress, err := storedRide.GetPassengerAddress()
+	passengerAddress, err := storedRide.GetPassengerSdkAddress()
 	if err != nil {
 		panic(err.Error())
 	}
@@ -46,12 +46,12 @@ func (k *Keeper) CollectPassengerStake(ctx sdk.Context, storedRide *types.Stored
 // can protect against more edge cases if there's time.
 func (k *Keeper) MustPayout(ctx sdk.Context, storedRide *types.StoredRide) {
 
-	passengerAddress, err := storedRide.GetPassengerAddress()
+	passengerAddress, err := storedRide.GetPassengerSdkAddress()
 	if err != nil {
 		panic(err.Error())
 	}
 
-	driverAddress, err := storedRide.GetDriverAddress()
+	driverAddress, err := storedRide.GetDriverSdkAddress()
 	if err != nil {
 		panic(err.Error())
 	}
@@ -100,7 +100,7 @@ func (k *Keeper) MustProcessDispute(ctx sdk.Context, storedRide *types.StoredRid
 
 func (k *Keeper) MustRefundStakes(ctx sdk.Context, storedRide *types.StoredRide) {
 
-	passengerAddress, err := storedRide.GetPassengerAddress()
+	passengerAddress, err := storedRide.GetPassengerSdkAddress()
 	if err != nil {
 		panic(err.Error())
 	}
@@ -116,7 +116,7 @@ func (k *Keeper) MustRefundStakes(ctx sdk.Context, storedRide *types.StoredRide)
 		return
 	}
 
-	driverAddress, err := storedRide.GetDriverAddress()
+	driverAddress, err := storedRide.GetDriverSdkAddress()
 	if err != nil {
 		panic(err.Error())
 	}

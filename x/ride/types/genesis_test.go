@@ -89,8 +89,9 @@ func TestGenesisState_Validate(t *testing.T) {
 func TestDefaultGenesisIsCorrect(t *testing.T) {
 	require.EqualValues(t,
 		&types.GenesisState{
-			StoredRideList: []types.StoredRide{},
-			NextRide:       &types.NextRide{uint64(1), "-1", "-1"},
+			StoredRideList:   []types.StoredRide{},
+			NextRide:         &types.NextRide{uint64(1), "-1", "-1"},
+			RatingStructList: []types.RatingStruct{},
 		},
 		types.DefaultGenesis())
 }

@@ -10,21 +10,21 @@ import (
 	"github.com/tendermint/tendermint/types"
 )
 
-func (storedRide StoredRide) GetDriverAddress() (driver sdk.AccAddress, err error) {
+func (storedRide StoredRide) GetDriverSdkAddress() (driver sdk.AccAddress, err error) {
 	if !storedRide.HasAssignedDriver() {
-		return nil, errors.Wrapf(err, ErrNoAssignedDriver.Error(), storedRide.Driver)
+		return nil, errors.Wrapf(err, ErrNoAssignedDriver.Error(), storedRide.DriverAddress)
 	}
-	driver, err = sdk.AccAddressFromBech32(storedRide.Driver)
-	return driver, errors.Wrapf(err, ErrInvalidDriver.Error(), storedRide.Driver)
+	driver, err = sdk.AccAddressFromBech32(storedRide.DriverAddress)
+	return driver, errors.Wrapf(err, ErrInvalidDriver.Error(), storedRide.DriverAddress)
 }
 
-func (storedRide StoredRide) GetPassengerAddress() (passenger sdk.AccAddress, err error) {
-	passenger, err = sdk.AccAddressFromBech32(storedRide.Passenger)
-	return passenger, errors.Wrapf(err, ErrInvalidPassenger.Error(), storedRide.Passenger)
+func (storedRide StoredRide) GetPassengerSdkAddress() (passenger sdk.AccAddress, err error) {
+	passenger, err = sdk.AccAddressFromBech32(storedRide.PassengerAddress)
+	return passenger, errors.Wrapf(err, ErrInvalidPassenger.Error(), storedRide.PassengerAddress)
 }
 
 func (storedRide StoredRide) HasAssignedDriver() bool {
-	return storedRide.Driver != ""
+	return storedRide.DriverAddress != ""
 }
 
 func (storedRide StoredRide) IsFinished() bool {

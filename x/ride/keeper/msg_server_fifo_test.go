@@ -75,16 +75,16 @@ func TestCreate3RidesHaveSavedFifo(t *testing.T) {
 			}
 
 			require.EqualValues(t, types.StoredRide{
-				Index:       tt.idValue,
-				Destination: "some other lat/long",
-				Driver:      "", // Driver should not be set yet.
-				Passenger:   tt.creator,
-				MutualStake: 50,
-				PayPerHour:  25,
-				DistanceTip: 10,
-				BeforeId:    tt.beforeId,
-				AfterId:     tt.afterId,
-				Deadline:    types.TimeToString(sdk.UnwrapSDKContext(context).BlockTime().Add(types.DeadlinePeriod)),
+				Index:            tt.idValue,
+				Destination:      "some other lat/long",
+				DriverAddress:    "", // Driver should not be set yet.
+				PassengerAddress: tt.creator,
+				MutualStake:      50,
+				PayPerHour:       25,
+				DistanceTip:      10,
+				BeforeId:         tt.beforeId,
+				AfterId:          tt.afterId,
+				Deadline:         types.TimeToString(sdk.UnwrapSDKContext(context).BlockTime().Add(types.DeadlinePeriod)),
 			}, ride)
 		})
 	}

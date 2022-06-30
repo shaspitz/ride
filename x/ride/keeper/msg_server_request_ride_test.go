@@ -63,16 +63,16 @@ func TestRideRequestStorage(t *testing.T) {
 	ride1, found1 := keeper.GetStoredRide(sdk.UnwrapSDKContext(context), "1")
 	require.True(t, found1)
 	require.EqualValues(t, types.StoredRide{
-		Index:       "1",
-		Destination: "some dest",
-		Driver:      "", // Driver should not be set yet.
-		Passenger:   alice,
-		MutualStake: 30,
-		PayPerHour:  15,
-		DistanceTip: 5,
-		BeforeId:    "-1",
-		AfterId:     "-1",
-		Deadline:    types.TimeToString(sdk.UnwrapSDKContext(context).BlockTime().Add(types.DeadlinePeriod)),
+		Index:            "1",
+		Destination:      "some dest",
+		DriverAddress:    "", // Driver should not be set yet.
+		PassengerAddress: alice,
+		MutualStake:      30,
+		PayPerHour:       15,
+		DistanceTip:      5,
+		BeforeId:         "-1",
+		AfterId:          "-1",
+		Deadline:         types.TimeToString(sdk.UnwrapSDKContext(context).BlockTime().Add(types.DeadlinePeriod)),
 	}, ride1)
 	require.Empty(t, ride1.AcceptanceTime)
 	require.Empty(t, ride1.FinishLocation)

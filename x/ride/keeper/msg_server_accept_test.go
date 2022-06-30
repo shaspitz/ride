@@ -93,17 +93,17 @@ func TestAcceptRideStorage(t *testing.T) {
 	require.True(t, found1)
 	// Ensure no other fields were mutated, and that driver is now assigned.
 	require.EqualValues(t, types.StoredRide{
-		Index:          "1",
-		Destination:    "some other loc",
-		Driver:         bob,
-		Passenger:      alice,
-		MutualStake:    50,
-		PayPerHour:     15,
-		DistanceTip:    10,
-		AcceptanceTime: types.TimeToString(sdk.UnwrapSDKContext(context).BlockTime()),
-		BeforeId:       "-1",
-		AfterId:        "-1",
-		Deadline:       types.TimeToString(sdk.UnwrapSDKContext(context).BlockTime().Add(types.DeadlinePeriod)),
+		Index:            "1",
+		Destination:      "some other loc",
+		DriverAddress:    bob,
+		PassengerAddress: alice,
+		MutualStake:      50,
+		PayPerHour:       15,
+		DistanceTip:      10,
+		AcceptanceTime:   types.TimeToString(sdk.UnwrapSDKContext(context).BlockTime()),
+		BeforeId:         "-1",
+		AfterId:          "-1",
+		Deadline:         types.TimeToString(sdk.UnwrapSDKContext(context).BlockTime().Add(types.DeadlinePeriod)),
 	}, ride1)
 	require.NotEmpty(t, ride1.AcceptanceTime)
 	require.NotEmpty(t, ride1.Deadline)

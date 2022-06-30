@@ -34,17 +34,17 @@ func (k msgServer) RequestRide(goCtx context.Context, msg *types.MsgRequestRide)
 		// NOTE: Start location would be validated/stored if a proof-of-location system were implemented.
 		Destination: msg.Destination,
 		// NOTE: Driver is set in the accept Tx.
-		Passenger:   msg.Creator,
-		MutualStake: msg.MutualStake,
-		PayPerHour:  msg.HourlyPay,
-		DistanceTip: msg.DistanceTip,
+		PassengerAddress: msg.Creator,
+		MutualStake:      msg.MutualStake,
+		PayPerHour:       msg.HourlyPay,
+		DistanceTip:      msg.DistanceTip,
 		// To be updated below.
 		BeforeId: types.NoFifoIdKey,
 		AfterId:  types.NoFifoIdKey,
 	}
 
 	// Validate assigned passenger address can be parsed.
-	_, err = storedRide.GetPassengerAddress()
+	_, err = storedRide.GetPassengerSdkAddress()
 	if err != nil {
 		return nil, err
 	}
@@ -69,7 +69,7 @@ func (k msgServer) RequestRide(goCtx context.Context, msg *types.MsgRequestRide)
 		sdk.NewEvent(sdk.EventTypeMessage,
 			sdk.NewAttribute(sdk.AttributeKeyModule, types.ModuleName),
 			sdk.NewAttribute(sdk.AttributeKeyAction, types.RequestRideEventKey),
-			sdk.NewAttribute(types.RequestRideEventPassenger, storedRide.Passenger),
+			sdk.NewAttribute(types.RequestRideEventPassenger, storedRide.PassengerAddress),
 			sdk.NewAttribute(types.RequestRideEventIndex, storedRide.Index),
 			sdk.NewAttribute(types.RequestRideStartLocation, msg.StartLocation),
 		),
