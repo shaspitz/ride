@@ -5,8 +5,15 @@ Focus -> business logic for such an idea, with the assumption that a [proof-of-l
 
 ## Design
 - Explain general business logic with parameters, add safety, assumptions, and future edge case todos
-- explain FIFO linked list.
-- Explain 2 min timeout
+
+### Store Pruning
+In order to prevent blockchain storage from growing arbitrarily large, inactive rides are removed from storage after a set time. If a ride has not been instantiated, mutated, etc. within a certain configured time on-chain, it'll be deleted from storage during the end-block routine. 
+
+To implement such an idea, rides must be checked for activity automatically. The process of iterating over every stored ride, during every end-block routine, could be quite computationally expensive. Instead, rides are structured together using a FIFO doubly linked list, where the most inactive rides are stored at the head of the list, and the rides that have been mutated most recently are stored at the tail of the list.
+
+A doubly linked list is used over a single-link list to enable ride removal from any index in the list, and corresponding appending of that ride at the tail of the list. This operation is executed whenever a ride is instantiated, mutated, etc. 
+
+Upon every end-block routine, the FIFO list is traversed for inactive rides, and appropriate rides are removed from storage. When the first "active" ride is found in the list (and should not be deleted), the traversal is terminated. 
 
 ## Demo Scripts
 1. Navigate to ```/scripts```
