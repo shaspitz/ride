@@ -101,8 +101,8 @@ export interface RideRatingStruct {
 export interface RideStoredRide {
   index?: string;
   destination?: string;
-  driver?: string;
-  passenger?: string;
+  driverAddress?: string;
+  passengerAddress?: string;
   acceptanceTime?: string;
   finishTime?: string;
   finishLocation?: string;
@@ -115,6 +115,8 @@ export interface RideStoredRide {
 
   /** @format uint64 */
   distanceTip?: string;
+
+  /** Fields pertaining to FIFO doubly linked list. */
   beforeId?: string;
   afterId?: string;
   deadline?: string;

@@ -29764,9 +29764,10 @@ paths:
                       type: string
                     destination:
                       type: string
-                    driver:
+                    driverAddress:
                       type: string
-                    passenger:
+                      title: addresses
+                    passengerAddress:
                       type: string
                     acceptanceTime:
                       type: string
@@ -29785,6 +29786,7 @@ paths:
                       format: uint64
                     beforeId:
                       type: string
+                      description: Fields pertaining to FIFO doubly linked list.
                     afterId:
                       type: string
                     deadline:
@@ -29910,9 +29912,10 @@ paths:
                     type: string
                   destination:
                     type: string
-                  driver:
+                  driverAddress:
                     type: string
-                  passenger:
+                    title: addresses
+                  passengerAddress:
                     type: string
                   acceptanceTime:
                     type: string
@@ -29931,6 +29934,7 @@ paths:
                     format: uint64
                   beforeId:
                     type: string
+                    description: Fields pertaining to FIFO doubly linked list.
                   afterId:
                     type: string
                   deadline:
@@ -51196,9 +51200,10 @@ definitions:
               type: string
             destination:
               type: string
-            driver:
+            driverAddress:
               type: string
-            passenger:
+              title: addresses
+            passengerAddress:
               type: string
             acceptanceTime:
               type: string
@@ -51217,6 +51222,7 @@ definitions:
               format: uint64
             beforeId:
               type: string
+              description: Fields pertaining to FIFO doubly linked list.
             afterId:
               type: string
             deadline:
@@ -51282,9 +51288,10 @@ definitions:
             type: string
           destination:
             type: string
-          driver:
+          driverAddress:
             type: string
-          passenger:
+            title: addresses
+          passengerAddress:
             type: string
           acceptanceTime:
             type: string
@@ -51303,6 +51310,7 @@ definitions:
             format: uint64
           beforeId:
             type: string
+            description: Fields pertaining to FIFO doubly linked list.
           afterId:
             type: string
           deadline:
@@ -51328,9 +51336,10 @@ definitions:
         type: string
       destination:
         type: string
-      driver:
+      driverAddress:
         type: string
-      passenger:
+        title: addresses
+      passengerAddress:
         type: string
       acceptanceTime:
         type: string
@@ -51349,6 +51358,7 @@ definitions:
         format: uint64
       beforeId:
         type: string
+        description: Fields pertaining to FIFO doubly linked list.
       afterId:
         type: string
       deadline:

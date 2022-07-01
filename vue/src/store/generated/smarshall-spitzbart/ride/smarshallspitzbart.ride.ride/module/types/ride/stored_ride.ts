@@ -7,14 +7,16 @@ export const protobufPackage = "smarshallspitzbart.ride.ride";
 export interface StoredRide {
   index: string;
   destination: string;
-  driver: string;
-  passenger: string;
+  /** addresses */
+  driverAddress: string;
+  passengerAddress: string;
   acceptanceTime: string;
   finishTime: string;
   finishLocation: string;
   mutualStake: number;
   payPerHour: number;
   distanceTip: number;
+  /** Fields pertaining to FIFO doubly linked list. */
   beforeId: string;
   afterId: string;
   deadline: string;
@@ -23,8 +25,8 @@ export interface StoredRide {
 const baseStoredRide: object = {
   index: "",
   destination: "",
-  driver: "",
-  passenger: "",
+  driverAddress: "",
+  passengerAddress: "",
   acceptanceTime: "",
   finishTime: "",
   finishLocation: "",
@@ -44,11 +46,11 @@ export const StoredRide = {
     if (message.destination !== "") {
       writer.uint32(18).string(message.destination);
     }
-    if (message.driver !== "") {
-      writer.uint32(26).string(message.driver);
+    if (message.driverAddress !== "") {
+      writer.uint32(26).string(message.driverAddress);
     }
-    if (message.passenger !== "") {
-      writer.uint32(34).string(message.passenger);
+    if (message.passengerAddress !== "") {
+      writer.uint32(34).string(message.passengerAddress);
     }
     if (message.acceptanceTime !== "") {
       writer.uint32(42).string(message.acceptanceTime);
@@ -94,10 +96,10 @@ export const StoredRide = {
           message.destination = reader.string();
           break;
         case 3:
-          message.driver = reader.string();
+          message.driverAddress = reader.string();
           break;
         case 4:
-          message.passenger = reader.string();
+          message.passengerAddress = reader.string();
           break;
         case 5:
           message.acceptanceTime = reader.string();
@@ -146,15 +148,18 @@ export const StoredRide = {
     } else {
       message.destination = "";
     }
-    if (object.driver !== undefined && object.driver !== null) {
-      message.driver = String(object.driver);
+    if (object.driverAddress !== undefined && object.driverAddress !== null) {
+      message.driverAddress = String(object.driverAddress);
     } else {
-      message.driver = "";
+      message.driverAddress = "";
     }
-    if (object.passenger !== undefined && object.passenger !== null) {
-      message.passenger = String(object.passenger);
+    if (
+      object.passengerAddress !== undefined &&
+      object.passengerAddress !== null
+    ) {
+      message.passengerAddress = String(object.passengerAddress);
     } else {
-      message.passenger = "";
+      message.passengerAddress = "";
     }
     if (object.acceptanceTime !== undefined && object.acceptanceTime !== null) {
       message.acceptanceTime = String(object.acceptanceTime);
@@ -209,8 +214,10 @@ export const StoredRide = {
     message.index !== undefined && (obj.index = message.index);
     message.destination !== undefined &&
       (obj.destination = message.destination);
-    message.driver !== undefined && (obj.driver = message.driver);
-    message.passenger !== undefined && (obj.passenger = message.passenger);
+    message.driverAddress !== undefined &&
+      (obj.driverAddress = message.driverAddress);
+    message.passengerAddress !== undefined &&
+      (obj.passengerAddress = message.passengerAddress);
     message.acceptanceTime !== undefined &&
       (obj.acceptanceTime = message.acceptanceTime);
     message.finishTime !== undefined && (obj.finishTime = message.finishTime);
@@ -239,15 +246,18 @@ export const StoredRide = {
     } else {
       message.destination = "";
     }
-    if (object.driver !== undefined && object.driver !== null) {
-      message.driver = object.driver;
+    if (object.driverAddress !== undefined && object.driverAddress !== null) {
+      message.driverAddress = object.driverAddress;
     } else {
-      message.driver = "";
+      message.driverAddress = "";
     }
-    if (object.passenger !== undefined && object.passenger !== null) {
-      message.passenger = object.passenger;
+    if (
+      object.passengerAddress !== undefined &&
+      object.passengerAddress !== null
+    ) {
+      message.passengerAddress = object.passengerAddress;
     } else {
-      message.passenger = "";
+      message.passengerAddress = "";
     }
     if (object.acceptanceTime !== undefined && object.acceptanceTime !== null) {
       message.acceptanceTime = object.acceptanceTime;

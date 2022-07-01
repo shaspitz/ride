@@ -34,7 +34,7 @@ type StoredRide struct {
 	MutualStake      uint64 `protobuf:"varint,8,opt,name=mutualStake,proto3" json:"mutualStake,omitempty"`
 	PayPerHour       uint64 `protobuf:"varint,9,opt,name=payPerHour,proto3" json:"payPerHour,omitempty"`
 	DistanceTip      uint64 `protobuf:"varint,10,opt,name=distanceTip,proto3" json:"distanceTip,omitempty"`
-	// doubly linked list
+	// Fields pertaining to FIFO doubly linked list.
 	BeforeId string `protobuf:"bytes,11,opt,name=beforeId,proto3" json:"beforeId,omitempty"`
 	AfterId  string `protobuf:"bytes,12,opt,name=afterId,proto3" json:"afterId,omitempty"`
 	Deadline string `protobuf:"bytes,13,opt,name=deadline,proto3" json:"deadline,omitempty"`
