@@ -3,8 +3,19 @@
 
 Focus -> business logic for such an idea, with the assumption that a [proof-of-location](https://tokens-economy.gitbook.io/consensus/chain-based-proof-of-capacity-space/dynamic-proof-of-location) like system would be implemented elsewhere. 
 
+## Design
+- Explain general business logic with parameters, add safety, assumptions, and future edge case todos
+- explain FIFO linked list.
+- Explain 2 min timeout
+
+## Demo Scripts
+1. Navigate to ```/scripts```
+2. In one termimal run ```./setup.sh``` which will rebuild and start the node.
+3. Run various business logic through the other scripts in a separate terminal. ```request.sh``` constructs and broadcasts a ride request tx from "alice", ```accept.sh``` constructs and broadcasts an acceptance tx for that ride from "bob". ```finish.sh``` invokes the tx that finishes the ride, and ```rate.sh``` has alice rate bob after the drive has completed.  
+
+
 ## CLI
-Below are some example CLI commands for the ride daemon. Demo functionality is included in ```/scripts```. 
+Below are some example CLI commands for the ride daemon.
 
 ```
 rided tx ride request-ride "some dest" "some other dest" 50 5 5 --from alice --gas auto
@@ -26,6 +37,7 @@ rided rided query bank balances cosmos16u4a2ajtfqmkn2ermq70cz32czr28g3z8ma26d
 ```
 ```
 rided tx ride rate 1 $bob 9.5 --from alice --gas auto 
+```
 ```
 rided q ride list-rating-struct
 ```
