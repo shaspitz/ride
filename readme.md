@@ -46,7 +46,7 @@ message NextRide {
 ```
 
 
-```StoredRide``` is a proto message and go struct type that can be instantiated and mutated through transactions, and is stored as a map using a string index. In hindsight, this schema could be split into more granular message types such as "ride requests" "active rides", and "ride receipts".
+```StoredRide``` is a proto message and go struct type that can be instantiated and mutated through transactions, and is stored as a map using a string index. In hindsight, this schema could be split into more granular message types such as "ride requests", "active rides", and "ride receipts".
 ```
 message StoredRide {
   string index = 1; 
@@ -69,7 +69,7 @@ message StoredRide {
 }
 ```
 
-```RatingStruct``` is a proto message and go struct type that represents the rating assigned a driver or passenger account. These structures are stored as a map using the account address as the string index.
+```RatingStruct``` is a proto message and go struct type that represents the rating assigned to a driver or passenger account. These structures are stored as a map using the account address as the string index.
 ```
 message RatingStruct {
   string index = 1; 
