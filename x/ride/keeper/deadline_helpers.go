@@ -8,76 +8,78 @@ import (
 )
 
 // Helpers to implement ride deadlines more efficiently.
-// See: https://tutorials.cosmos.network/academy/3-my-own-chain/game-fifo.html
+// See: https://tutorials.cosmos.network/academy/3-my-own-chain/ride-fifo.html
 
 func GetNextDeadline(ctx sdk.Context) time.Time {
 	return ctx.BlockTime().Add(types.DeadlinePeriod)
 }
 
+// Removes a stored ride from the FIFO doubly linked list.
 // UPDATE STORE AFTER USING THIS METHOD.
-func (k Keeper) RemoveFromFifo(ctx sdk.Context, game *types.StoredRide, info *types.NextRide) {
+func (k Keeper) RemoveFromFifo(ctx sdk.Context, ride *types.StoredRide, info *types.NextRide) {
 	// Does it have a predecessor?
-	if game.BeforeId != types.NoFifoIdKey {
-		beforeElement, found := k.GetStoredRide(ctx, game.BeforeId)
+	if ride.BeforeId != types.NoFifoIdKey {
+		beforeElement, found := k.GetStoredRide(ctx, ride.BeforeId)
 		if !found {
 			panic("Element before in Fifo was not found")
 		}
-		beforeElement.AfterId = game.AfterId
+		beforeElement.AfterId = ride.AfterId
 		k.SetStoredRide(ctx, beforeElement)
-		if game.AfterId == types.NoFifoIdKey {
+		if ride.AfterId == types.NoFifoIdKey {
 			info.FifoTail = beforeElement.Index
 		}
 		// Is it at the FIFO head?
-	} else if info.FifoHead == game.Index {
-		info.FifoHead = game.AfterId
+	} else if info.FifoHead == ride.Index {
+		info.FifoHead = ride.AfterId
 	}
 	// Does it have a successor?
-	if game.AfterId != types.NoFifoIdKey {
-		afterElement, found := k.GetStoredRide(ctx, game.AfterId)
+	if ride.AfterId != types.NoFifoIdKey {
+		afterElement, found := k.GetStoredRide(ctx, ride.AfterId)
 		if !found {
 			panic("Element after in Fifo was not found")
 		}
-		afterElement.BeforeId = game.BeforeId
+		afterElement.BeforeId = ride.BeforeId
 		k.SetStoredRide(ctx, afterElement)
-		if game.BeforeId == types.NoFifoIdKey {
+		if ride.BeforeId == types.NoFifoIdKey {
 			info.FifoHead = afterElement.Index
 		}
 		// Is it at the FIFO tail?
-	} else if info.FifoTail == game.Index {
-		info.FifoTail = game.BeforeId
+	} else if info.FifoTail == ride.Index {
+		info.FifoTail = ride.BeforeId
 	}
-	game.BeforeId = types.NoFifoIdKey
-	game.AfterId = types.NoFifoIdKey
+	ride.BeforeId = types.NoFifoIdKey
+	ride.AfterId = types.NoFifoIdKey
 }
 
+// Appends a stored ride to the tail of the FIFO doubly linked list, removes it from previous index if needed.
 // UPDATE STORE AFTER USING THIS METHOD.
-func (k Keeper) SendToFifoTail(ctx sdk.Context, game *types.StoredRide, info *types.NextRide) {
+func (k Keeper) SendToFifoTail(ctx sdk.Context, ride *types.StoredRide, info *types.NextRide) {
 
 	// Update deadline before moving within linked list.
-	game.Deadline = types.TimeToString(GetNextDeadline(ctx))
+	ride.Deadline = types.TimeToString(GetNextDeadline(ctx))
 
 	if info.FifoHead == types.NoFifoIdKey && info.FifoTail == types.NoFifoIdKey {
-		game.BeforeId = types.NoFifoIdKey
-		game.AfterId = types.NoFifoIdKey
-		info.FifoHead = game.Index
-		info.FifoTail = game.Index
+		ride.BeforeId = types.NoFifoIdKey
+		ride.AfterId = types.NoFifoIdKey
+		info.FifoHead = ride.Index
+		info.FifoTail = ride.Index
 	} else if info.FifoHead == types.NoFifoIdKey || info.FifoTail == types.NoFifoIdKey {
 		panic("Fifo should have both head and tail or none")
-	} else if info.FifoTail == game.Index {
+	} else if info.FifoTail == ride.Index {
 		// Nothing to do, already at tail
 	} else {
-		// Snip game out
-		k.RemoveFromFifo(ctx, game, info)
+		// Snip ride out
+		k.RemoveFromFifo(ctx, ride, info)
 
 		// Now add to tail
 		currentTail, found := k.GetStoredRide(ctx, info.FifoTail)
 		if !found {
 			panic("Current Fifo tail was not found")
 		}
-		currentTail.AfterId = game.Index
+		currentTail.AfterId = ride.Index
 		k.SetStoredRide(ctx, currentTail)
 
-		game.BeforeId = currentTail.Index
-		info.FifoTail = game.Index
+		ride.BeforeId = currentTail.Index
+		info.FifoTail = ride.Index
 	}
 }

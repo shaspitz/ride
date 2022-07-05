@@ -17,7 +17,7 @@ Upon every end-block routine, the FIFO list is traversed for inactive rides, and
 
 ## Demo Scripts
 1. Navigate to ```/scripts```
-2. In one termimal run ```./setup.sh``` which will rebuild and start the node.
+2. In one terminal run ```./setup.sh``` which will rebuild and start the node.
 3. Run various business logic through the other scripts in a separate terminal. ```request.sh``` constructs and broadcasts a ride request tx from "alice", ```accept.sh``` constructs and broadcasts an acceptance tx for that ride from "bob". ```finish.sh``` invokes the tx that finishes the ride, and ```rate.sh``` has alice rate bob after the drive has completed.  
 
 

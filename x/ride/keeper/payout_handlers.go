@@ -94,10 +94,6 @@ func (k *Keeper) MustPayout(ctx sdk.Context, storedRide *types.StoredRide) {
 	}
 }
 
-func (k *Keeper) MustProcessDispute(ctx sdk.Context, storedRide *types.StoredRide) {
-	// TODO, implement disputes later on.
-}
-
 func (k *Keeper) MustRefundStakes(ctx sdk.Context, storedRide *types.StoredRide) {
 
 	passengerAddress, err := storedRide.GetPassengerSdkAddress()
