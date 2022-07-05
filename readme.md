@@ -9,25 +9,25 @@ Focus -> business logic for such an idea, with the assumption that a [proof-of-l
 ```
 rided tx ride request-ride [start-location] [destination] [mutual-stake] [hourly-pay] [distance-tip] [flags]
 ```
-requests a tracked ride with arguments proposed by passenger account. Locations aren't actually used in current implementation, but could be stored as lat/long strings and verified on-chain. Mutual stake, hourly pay, and distance tip affect the payout of a driver and are publicly queryable. Off-chain app could optimize parameters in a production setting.
+```request-ride``` requests a tracked ride with arguments proposed by passenger account. Locations aren't actually used in current implementation, but could be stored as lat/long strings and verified on-chain. Mutual stake, hourly pay, and distance tip affect the payout of a driver and are publicly queryable. Off-chain app could optimize parameters in a production setting.
 
 ```
 rided tx ride accept [id-value] [flags]
 ```
-Allows a driver account to accept a requested ride on-chain. Id value denotes the returned integer id from the request-ride transaction.
+```accept``` allows a driver account to accept a requested ride on-chain. Id value denotes the returned integer id from the request-ride transaction.
 
 ```
 rided tx ride finish [id-value] [end-location] [flags]
 ```
-Allows a driver or passenger account to finish an in-progress (accepted from above) ride. Passenger is allowed to finish ride at any time in the ride if driver is being dangerous, etc. Payouts are not processed until the ride is considered inactive,and pruning interval has passed as explained below.
+```finish``` allows a driver or passenger account to finish an in-progress (accepted from above) ride. Passenger is allowed to finish ride at any time in the ride if driver is being dangerous, etc. Payouts are not processed until the ride is considered inactive,and pruning interval has passed as explained below.
 
 ```
 rided tx ride rate [ride-id] [ratee] [rating] [flags]
 ```
-Allows a driver or passenger account to rate the opposite party of a ride after it has finished and before it is automatically removed from storage. All passenger/driver ratings are initialized to 0 and can be improved upon more ratings, where rating is determined by a running pseudo-average.
+```rate``` allows a driver or passenger account to rate the opposite party of a ride after it has finished and before it is automatically removed from storage. All passenger/driver ratings are initialized to 0 and can be improved upon more ratings, where rating is determined by a running pseudo-average.
 
 ### On-chain Data Schema
-
+```
 message NextRide {
   uint64 idValue = 1; // Incrementing counter for assigning unique ids to new rides.
 
@@ -40,7 +40,8 @@ message NextRide {
   string fifoHead = 2;
   string fifoTail = 3;
   
-}
+}   
+```
 
 ```
 message StoredRide {
