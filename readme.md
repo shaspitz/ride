@@ -28,6 +28,7 @@ rided tx ride rate [ride-id] [ratee] [rating] [flags]
 ```
 
 ### On-chain Data Schema
+```NextRide``` is a proto message and go struct type, of which one object is instantiated at genesis which keeps track of a ride id counter, and the head/tail of the FIFO linked list as explained below. 
 ```
 message NextRide {
   uint64 idValue = 1; // Incrementing counter for assigning unique ids to new rides.
@@ -44,6 +45,8 @@ message NextRide {
 }   
 ```
 
+
+```StoredRide``` is a proto message and go struct type that can be instantiated and mutated through transactions, and is stored as a map using a string index. In hindsight, this schema could be split into more granular message types such as "ride requests" "active rides", and "ride receipts".
 ```
 message StoredRide {
   string index = 1; 
@@ -66,6 +69,7 @@ message StoredRide {
 }
 ```
 
+```RatingStruct``` is a proto message and go struct type that represents the rating assigned a driver or passenger account. These structures are stored as a map using the account address as the string index.
 ```
 message RatingStruct {
   string index = 1; 
