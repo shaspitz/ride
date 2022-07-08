@@ -622,3 +622,20 @@ func TestRateRide(t *testing.T) {
 	require.Nil(t, err)
 	require.EqualValues(t, 9.5*0.1*0.9+8.5*0.1, ratingAsFloat)
 }
+
+func TestGasConsumption(t *testing.T) {
+	msgServer, _, context := setupMsgServerWithDefaultGenesis(t)
+	sdkCtx := sdk.UnwrapSDKContext(context)
+	gasBefore := sdkCtx.GasMeter().GasConsumed()
+	msgServer.RequestRide(context, &types.MsgRequestRide{
+		Creator:       alice,
+		StartLocation: "some loc",
+		Destination:   "some dest",
+		MutualStake:   30,
+		HourlyPay:     15,
+		DistanceTip:   5,
+	})
+	gasAfter := sdkCtx.GasMeter().GasConsumed()
+	fmt.Println(gasAfter - gasBefore)
+	require.EqualValues(t, uint64(0x243e)+uint64(10), gasAfter-gasBefore)
+}
